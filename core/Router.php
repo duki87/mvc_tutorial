@@ -20,7 +20,7 @@
       //$controller = ROOT . DS . 'app' . DS . 'controllers' . DS . $controller;
       $dispatch = new $controller($controller_name, $action);
       if(method_exists($controller, $action)) {
-        call_user_function_array([$dispatch, $action], $queryParams);
+        call_user_func_array([$dispatch, $action], $queryParams);
       } else {
         die('METHOD_NOT_EXISTS');
       }

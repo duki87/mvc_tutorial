@@ -13,7 +13,7 @@
     } elseif (file_exists(ROOT . DS . 'app' . DS . 'models' . DS . $className . '.php')) {
       require_once(ROOT . DS . 'app' . DS . 'models' . DS . $className . '.php');
     } else {
-      die('sdfsfd');
+      die('CONTROLLER_NOT_EXISTS');
     }
   });
 
