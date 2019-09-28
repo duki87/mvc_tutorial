@@ -9,6 +9,5 @@
     public function index()
     {
       $this->view->render('home/index');
-      //die('WELCOME TO HOME CONTROLLER. <br> THIS IS index() METHOD.');
     }
   }
