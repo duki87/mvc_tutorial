@@ -28,7 +28,7 @@
       //echo(ROOT . DS . 'app' . DS . 'controllers' . DS . $className . '.php'.'<br>');
       require_once(ROOT . DS . 'app' . DS . 'controllers' . DS . $className . '.php');
     } elseif(file_exists(ROOT . DS . 'app' . DS . 'models' . DS . $className . '.php')) {
-      echo(ROOT . DS . 'app' . DS . 'models' . DS . $className . '.php'.'<br>');
+      //echo(ROOT . DS . 'app' . DS . 'models' . DS . $className . '.php'.'<br>');
       require_once(ROOT . DS . 'app' . DS . 'models' . DS . $className . '.php');
     } else {
       die('CONTROLLER_NOT_EXISTS');

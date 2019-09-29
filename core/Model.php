@@ -9,7 +9,7 @@
       $this->_db = DB::getInstance();
       $this->_table = $table;
       $this->_setTableColumns();
-      $this->_modelName = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->_table)));
+      $this->_modelName = str_replace(' ', '', ucwords(str_replace('_',' ', $this->_table)));
     }
 
     protected function _setTableColumns()
@@ -24,7 +24,7 @@
 
     public function getColumns()
     {
-      retrun $this->_db->getColumns($this->_table);
+      return $this->_db->getColumns($this->_table);
     }
 
     public function find($params = [])
@@ -39,11 +39,14 @@
       return $results;
     }
 
-    public function first($params = [])
+    public function findFirst($params = [])
     {
       $resultsQuery = $this->_db->findFirst($this->_table, $params);
       $result = new $this->_modelName($this->_table);
-      $result->populateObj($resultsQuery);
+      if($resultsQuery) {
+        $result->populateObj($resultsQuery);
+      }
+      //return $resultsQuery;
       return $result;
     }
 
@@ -85,7 +88,7 @@
     public function delete($where = [])
     {
       if(empty($where)) return false;
-      if($this->-$_softDelete) {
+      if($this->_softDelete) {
         return $this->update($where, ['deleted' => 1]);
       }
       return $this->_db->delete($this->_table, $where);
@@ -120,8 +123,8 @@
 
     protected function populateObj($result)
     {
-      foreach ($result as $key => $value) {
-        $this->key = $val;
+      foreach($result as $key => $value) {
+        $this->{$key} = $value;
       }
     }
 

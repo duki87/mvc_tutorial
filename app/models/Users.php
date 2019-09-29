@@ -4,6 +4,7 @@
   {
     private $_isLoggedIn, $_sessionName, $_cookieName;
     public static $currentLoggedInUser = null;
+    //public $id,$username,$email,$password,$fname,$lname,$acl,$deleted = 0;
 
     public function __construct($user = '')
     {
@@ -28,7 +29,7 @@
 
     public function findByUserName($username)
     {
-      return $this->first(['conditions' => ['username'], 'bind' => [$username]]);
+      return $this->findFirst(['conditions' => ['username'], 'bind' => [$username]]);
     }
 
     public function login($remember_me = false)

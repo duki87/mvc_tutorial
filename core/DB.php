@@ -160,7 +160,7 @@
 
     protected function _read($table, $params = [])
     {
-      $contitionString = '';
+      $conditionString = '';
       $bind = [];
       $order = '';
       $limit = '';
@@ -198,6 +198,7 @@
       }
       $sql = "SELECT * FROM {$table} {$conditionString} {$order} {$limit}";
       //dnd($sql);
+      $sql = rtrim($sql, ' '); //delete if makes a problem
       if($this->query($sql, $bind)) {
         if(!count($this->_results)) return false;
         return true;
