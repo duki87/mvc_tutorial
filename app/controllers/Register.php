@@ -17,7 +17,7 @@
         $validation->check($_POST, [
           'username'  =>  [
             'display'   =>  'Username',
-            'required'  =>  true
+            'required'  =>  true,
           ],
           'password'  =>  [
             'display'   =>  'Password',
@@ -30,10 +30,14 @@
             $remember = (isset($_POST['remember_me']) && Input::get('remember_me')) ? true : false;
             $user->login($remember);
             Router::redirect('');
+          } else {
+            $validation->addError('There is an error with your username or password!');
+            $this->view->displayErrors = $validation->displayErrors();
           }
+        } else {
+          $this->view->displayErrors = $validation->displayErrors();
         }
       }
-      $this->view->displayErrors = $validation->displayErrors(); 
       $this->view->render('register/login');
     }
 

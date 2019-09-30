@@ -2,7 +2,7 @@
 
   class Validate
   {
-    private $_passed = false, $_errors = [], $_db = null;
+    private $_passed = false, $_errors = [], $_db = null, $_errorFields = [];
 
     public function __construct()
     {
@@ -69,6 +69,10 @@
           }
         }
       }
+      if(empty($this->_errors)) {
+        $this->_passed = true;
+      }
+      return $this;
     }
 
     public function addError($error)
@@ -93,12 +97,16 @@
 
     public function displayErrors()
     {
-      $html = '<ul class="list-group">';
+      $html = '<div class="alert alert-danger" role="alert"><ul class="">';
       foreach ($this->_errors as $error) {
-        $html .= '<li class="list-group-item list-group-item-danger">'.$error[0].'</li>';
-        $html .= '<script>$(document).ready(function(){ $("#'.$error[1].'").parent().closest("div").addClass("danger") })</script>';
+        if(is_array($error)) {
+          $html .= '<li class="">'.$error[0].'</li>';
+          $html .= '<script>$(document).ready(function(){ $("#'.$error[1].'").addClass("is-invalid"); });</script>';
+        } else {
+          $html .= '<li class="">'.$error.'</li>';
+        }
       }
-      $html .= '</ul>';
+      $html .= '</div></ul>';
       return $html;
     }
   }
