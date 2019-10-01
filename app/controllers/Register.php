@@ -41,6 +41,14 @@
       $this->view->render('register/login');
     }
 
+    public function logout()
+    {
+      if(Users::currentLoggedInUser()) {
+        currentLoggedInUser()->logout();    
+      }
+      Router::redirect('register/login');
+    }
+
     public function register()
     {
       $this->view->render('register/register');
