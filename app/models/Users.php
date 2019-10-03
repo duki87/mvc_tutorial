@@ -21,7 +21,7 @@
         }
         if($u) {
           foreach ($u as $key => $value) {
-            $this->key = $value;
+            $this->{$key} = $value;
           }
         }
       }
@@ -48,6 +48,8 @@
     public function logout()
     {
       $user_agent = Session::uagent_no_version();
+      // $userSession = UserSessions::getFromCookie();
+      // $userSession->delete();
       $this->_db->query("DELETE FROM user_sessions WHERE user_id = ? AND user_agent = ?", [$this->id, $user_agent]);
       Session::delete(CURRENT_USER_SESSION_NAME);
       if(Cookie::exists(REMEMBER_ME_COOKIE)) {
@@ -64,5 +66,15 @@
         self::$currentLoggedInUser = $u;
       }
       return self::$currentLoggedInUser;
+    }
+
+    public static function loginFromCookie()
+    {
+      $userSession = UserSessions::getFromCookie();
+      if($userSession->user_id != '') {
+        $user = new self((int)$userSession->user_id);
+        $user->login();
+        return $user;
+      }
     }
   }

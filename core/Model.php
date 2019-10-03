@@ -46,7 +46,6 @@
       if($resultsQuery) {
         $result->populateObj($resultsQuery);
       }
-      //return $resultsQuery;
       return $result;
     }
 

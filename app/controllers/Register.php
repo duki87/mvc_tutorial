@@ -44,7 +44,7 @@
     public function logout()
     {
       if(Users::currentLoggedInUser()) {
-        currentLoggedInUser()->logout();    
+        Users::currentLoggedInUser()->logout();    
       }
       Router::redirect('register/login');
     }
