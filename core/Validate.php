@@ -33,7 +33,7 @@
                 break;
               case 'matches':
                 if($value != $source[$ruleValue]) {
-                  $matchDisplay = $items([$ruleValue]['display']);
+                  $matchDisplay = $items[$ruleValue]['display'];
                   $this->addError(["{$matchDisplay} and {$display} must match!", $item]);
                 }
                 break;
@@ -97,6 +97,9 @@
 
     public function displayErrors()
     {
+      if(empty($this->_errors)) {
+        return '';
+      }
       $html = '<div class="alert alert-danger" role="alert"><ul class="">';
       foreach ($this->_errors as $error) {
         if(is_array($error)) {

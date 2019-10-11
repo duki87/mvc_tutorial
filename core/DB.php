@@ -8,6 +8,8 @@
     {
       try {
         $this->_pdo = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASSWORD);
+        $this->_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->_pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
       } catch(PDOException $e) {
         die($e->getMessage());
       }
@@ -30,11 +32,13 @@
         $x = 1;
         if(count($params))
         {
-          foreach ($params as $param) {
+          //dnd($params);
+          foreach($params as $param) {
             $this->_query->bindValue($x, $param);
             $x++;
           }
         }
+
         if($this->_query->execute())
         {
           $this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);
@@ -55,14 +59,20 @@
       $valueString = '';
       $values = [];
 
-      foreach ($fields as $field => $value) {
+      foreach($fields as $field => $value) {
+        //MySQL won't insert if id == null, so we need to delete this field
+        if($field === 'id') {
+          continue;
+        }
         $fieldString .= '`' . $field . '`,';
         $valueString .= '?,';
         $values[] = $value;
       }
+
       $fieldString = rtrim($fieldString, ',');
       $valueString = rtrim($valueString, ',');
       $sql = "INSERT INTO $table ({$fieldString}) VALUES ({$valueString})";
+      //dnd($values);
       if(!$this->query($sql, $values)->error()) {
         return true;
       }
@@ -105,12 +115,13 @@
       foreach ($where as $field => $value) {
         $fieldString .= ' `' . $field . '` = ? AND';
         $values[] = $value;
-        echo $value . '<br>';
+        //echo $value . '<br>';
       }
       $fieldString = rtrim($fieldString, 'AND ');
       $fieldString = trim($fieldString, ' ');
       $sql = "DELETE FROM $table WHERE {$fieldString}";
       //dnd($sql);
+      //dnd($values);
       if(!$this->query($sql, $values)->error()) {
         return true;
       }
@@ -209,5 +220,10 @@
     public function error()
     {
       return $this->_error;
+    }
+
+    public function lastInsertId()
+    {
+      return $this->_lastInsertId;
     }
   }

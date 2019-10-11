@@ -1,0 +1,14 @@
+{
+  "Home"  : "Home",
+  "Tools" : {
+    "All Tools" : "tools/index",
+    "separator" : "",
+    "Frontend"  : "tools/frontend",
+    "Backend" : "tools/backend",
+    "Android" : "tools/android"
+  },
+  "Google"  : "https://www.google.rs/",
+  "PHP" : "https://www.php.net/manual/en",
+  "Login" : "register/login",
+  "Logout"  : "register/logout"
+}

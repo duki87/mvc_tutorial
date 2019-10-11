@@ -17,3 +17,12 @@
   {
     return Users::currentLoggedInUser();
   }
+
+  function postedValues($post)
+  {
+    $cleanArray = [];
+    foreach ($post as $key => $value) {
+      $cleanArray[$key] = sanitize($value);
+    }
+    return $cleanArray;
+  }

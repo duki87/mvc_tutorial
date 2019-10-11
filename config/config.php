@@ -8,6 +8,7 @@
   define('CURRENT_USER_SESSION_NAME', 'xjkwWFLLadAwWEFlVLlEesqa'); //session name for logged in user
   define('REMEMBER_ME_COOKIE', 'ajkwWFLvdAwWEFlVLlEebAUi'); // cookie name for logged in user
   define('REMEMBER_COOKIE_EXPIRE', 604800); //expire time in seconds for remember me cookie - 7 days
+  define('ACCESS_RESTRICTED', 'Restricted'); //define restricted constant for restricted redirect
 
   //DB constants
   define('DB_NAME', 'framework');

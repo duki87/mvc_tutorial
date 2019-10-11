@@ -15,4 +15,12 @@
         return self::sanitize($_GET[$input]);
       }
     }
+
+    public static function formInputs($inputs = [])
+    {
+      foreach ($inputs as $key => $value) {
+        $inputs[$key] = $value;
+      }
+      return $inputs;
+    }
   }

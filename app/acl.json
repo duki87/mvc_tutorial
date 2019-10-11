@@ -1,0 +1,18 @@
+{
+  "Guest" : {
+    "denied"  : {},
+    "Home"  : ["*"],
+    "Register"  : ["login", "register"],
+    "Restricted"  : ["*"]
+  },
+  "LoggedIn"  : {
+    "denied"  : {
+      "Register"  : ["login", "register"]
+    },
+    "Register"  : ["logout"],
+    "Tools"  : ["*"]
+  },
+  "Gold"  : {
+    "denied"  : {}
+  }
+}

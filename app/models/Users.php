@@ -45,12 +45,21 @@
       }
     }
 
+    public function register($params)
+    {
+      $this->assign($params);
+      $this->password = password_hash($this->password, PASSWORD_BCRYPT);
+      $this->deleted = 0;
+      if($this->save()) {
+        $this->id = $this->getLastInsertId();
+        return true;
+      }
+    }
+
     public function logout()
     {
-      $user_agent = Session::uagent_no_version();
-      // $userSession = UserSessions::getFromCookie();
-      // $userSession->delete();
-      $this->_db->query("DELETE FROM user_sessions WHERE user_id = ? AND user_agent = ?", [$this->id, $user_agent]);
+      $userSession = UserSessions::getFromCookie();
+      $userSession->deleteSession();
       Session::delete(CURRENT_USER_SESSION_NAME);
       if(Cookie::exists(REMEMBER_ME_COOKIE)) {
         Cookie::delete(REMEMBER_ME_COOKIE);
@@ -76,5 +85,11 @@
         $user->login();
         return $user;
       }
+    }
+
+    public function acls()
+    {
+      if(empty($this->acl)) return [];
+      return json_decode($this->acl);
     }
   }

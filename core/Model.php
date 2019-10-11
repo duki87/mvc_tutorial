@@ -62,8 +62,8 @@
     public function save()
     {
       $fields = [];
-      foreach ($this->_columnNames as $column) {
-        $fields[$column] = $this->$column;
+      foreach($this->_columnNames as $column) {
+        $fields[$column] = $this->{$column};
       }
       //Determine whether to update or insert new record
       if(property_exists($this, 'id') && $this->id != '') {
@@ -110,9 +110,9 @@
     public function assign($params)
     {
       if(!empty($params)) {
-        foreach ($params as $key => $value) {
+        foreach($params as $key => $value) {
           if(in_array($key, $this->_columnNames)) {
-            $this->$key = sanitize($value);
+            $this->{$key} = sanitize($value);
           }
         }
         return true;
@@ -125,6 +125,11 @@
       foreach($result as $key => $value) {
         $this->{$key} = $value;
       }
+    }
+
+    protected function getLastInsertId()
+    {
+      return $this->_db->lastInsertId();
     }
 
   }
