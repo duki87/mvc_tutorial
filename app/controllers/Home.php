@@ -8,7 +8,7 @@
     }
     public function index()
     {
-      dnd($_SESSION);
+      //dnd($_SESSION);
       $this->view->render('home/index');
     }
   }

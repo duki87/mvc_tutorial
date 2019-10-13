@@ -26,3 +26,12 @@
     }
     return $cleanArray;
   }
+
+  function currentPage()
+  {
+    $currentPage = $_SERVER['REQUEST_URI'];
+    if($currentPage == SITE_ROOT || $currentPage == SITE_ROOT . 'home/index') {
+      $currentPage = SITE_ROOT . 'home/index';
+    }
+    return $currentPage;
+  }

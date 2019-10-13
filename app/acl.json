@@ -10,9 +10,13 @@
       "Register"  : ["login", "register"]
     },
     "Register"  : ["logout"],
-    "Tools"  : ["*"]
+    "Tools"  : ["*"],
+    "Profile" : ["*"]
   },
   "Gold"  : {
+    "denied"  : {}
+  },
+  "Silver"  : {
     "denied"  : {}
   }
 }

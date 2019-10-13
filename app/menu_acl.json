@@ -1,5 +1,5 @@
 {
-  "Home"  : "Home",
+  "Home"  : "home/index",
   "Tools" : {
     "All Tools" : "tools/index",
     "separator" : "",
@@ -10,5 +10,9 @@
   "Google"  : "https://www.google.rs/",
   "PHP" : "https://www.php.net/manual/en",
   "Login" : "register/login",
-  "Logout"  : "register/logout"
+  "Profile"  : {
+    "Profile" : "profile/getProfile",
+    "separator" : "",
+    "Logout"  : "register/logout"
+  }
 }

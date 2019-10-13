@@ -61,7 +61,7 @@
         }
       }
       foreach($currentUserAcls as $key) {
-        if($acl[$key] === null) continue; //added for testing
+        if($acl[$key] === null) continue;
         if(array_key_exists($key, $acl) && array_key_exists($controller_name, $acl[$key])) {
           if(in_array($action_name, $acl[$key][$controller_name]) || in_array("*", $acl[$key][$controller_name])) {
             $grantAccess = true;
@@ -71,19 +71,62 @@
       }
       //check for denied
       foreach($currentUserAcls as $key) {
-        //added for testing
         if(!array_key_exists($key, $acl)) {
           continue;
         }
-        //finish added
         $denied = $acl[$key]['denied'];
-        if($denied === null) continue; //added for testing
+        if($denied === null) continue;
         if(!empty($denied) && array_key_exists($controller_name, $denied) && in_array($action_name, $denied[$controller_name])) {
           $grantAccess = false;
           break;
         }
       }
-      //dnd($currentUserAcls);
       return $grantAccess;
+    }
+
+    public static function getMenu($menu)
+    {
+      $menuArray = [];
+      $menuFile = file_get_contents(ROOT . DS . 'app' . DS . $menu . '.json');
+      $acl = json_decode($menuFile, true);
+      foreach($acl as $key => $value) {
+        if(is_array($value)) {
+          $submenu = [];
+          foreach($value as $subKey => $subValue) {
+            if($subKey == 'separator' && !empty($submenu)) {
+              $submenu[$subKey] = '';
+              continue;
+            } else if($finalValue = self::getLink($subValue)) {
+              $submenu[$subKey] = $finalValue;
+            } else {
+              //$sub[$subKey] = self::getLink($subValue);
+            }
+          }
+          if(!empty($submenu)) {
+            $menuArray[$key] = $submenu;
+          }
+        } else {
+          if($finalValue = self::getLink($value)) {
+            $menuArray[$key] = $finalValue;
+          }
+        }
+      }
+      return $menuArray;
+    }
+
+    private static function getLink($item)
+    {
+      //Check if it is external link
+      if(preg_match('/https?:\/\//', $item) == 1) {
+        return $item;
+      } else {
+        $e = explode('/', $item);
+        $controller_name = ucwords($e[0]);
+        $action_name = (isset($e[1])) ? $e[1] : '';
+        if(self::hasAccess($controller_name, $action_name)) {
+          return SITE_ROOT . $item;
+        }
+        return false;
+      }
     }
   }

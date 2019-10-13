@@ -14,6 +14,8 @@
     <?=$this->content('head');?>
   </head>
   <body>
+    <?php include 'main-menu.php';?>
+    <div class="mt-2"></div>
     <?=$this->content('body');?>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
