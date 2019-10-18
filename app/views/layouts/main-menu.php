@@ -48,20 +48,22 @@
     </ul>
 
     <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <?php echo currentUser()->fname; ?>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-          <?php foreach($userMenu as $userKey => $userValue): ?>
-            <?php if($userKey == 'separator'): ?>
-              <div class="dropdown-divider"></div>
-            <?php else: ?>
-              <a class="dropdown-item" href="<?=$userValue;?>"><?=$userKey;?></a>
-            <?php endif; ?>
-          <?php endforeach; ?>
-        </div>
-      </li>
+      <?php if(currentUser()->id): ?>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <?php echo currentUser()->fname; ?>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+            <?php foreach($userMenu as $userKey => $userValue): ?>
+              <?php if($userKey == 'separator'): ?>
+                <div class="dropdown-divider"></div>
+              <?php else: ?>
+                <a class="dropdown-item" href="<?=$userValue;?>"><?=$userKey;?></a>
+              <?php endif; ?>
+            <?php endforeach; ?>
+          </div>
+        </li>
+      <?php endif; ?>
     </ul>
   </div>
 </nav>

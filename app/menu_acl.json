@@ -7,6 +7,10 @@
     "Backend" : "tools/backend",
     "Android" : "tools/android"
   },
+  "Contacts"  : {
+    "Contacts"  : "contacts/index",
+    "Add Contact" : "contacts/add"
+  },
   "Google"  : "https://www.google.rs/",
   "PHP" : "https://www.php.net/manual/en",
   "Login" : "register/login",
