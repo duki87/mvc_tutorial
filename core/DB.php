@@ -155,6 +155,7 @@
 
     public function find($table, $params = [])
     {
+      //dnd($params);
       if($this->_read($table, $params)) {
         return $this->results();
       }
@@ -178,10 +179,12 @@
 
       //conditions
       if(isset($params['conditions'])) {
+
         if(is_array($params['conditions'])) {
           foreach($params['conditions'] as $condition) {
             $conditionString .= ' `' . $condition . '` = ? AND';
           }
+
           $conditionString = trim($conditionString);
           $conditionString = rtrim($conditionString, ' AND');
         } else {
@@ -198,7 +201,7 @@
       //order
       if(array_key_exists('order', $params)) {
         $order .= ' ORDER BY ';
-        foreach ($params['order'] as $value) {
+        foreach($params['order'] as $value) {
           $order .= $value . ', ';
         }
         $order = rtrim($order, ', ');
@@ -208,7 +211,6 @@
         $limit = 'LIMIT ' . $params['limit'];
       }
       $sql = "SELECT * FROM {$table} {$conditionString} {$order} {$limit}";
-      //dnd($sql);
       $sql = rtrim($sql, ' '); //delete if makes a problem
       if($this->query($sql, $bind)) {
         if(!count($this->_results)) return false;

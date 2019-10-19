@@ -16,6 +16,7 @@
   function currentUser()
   {
     return Users::currentLoggedInUser();
+    exit(); //delete if makes problem
   }
 
   function postedValues($post)

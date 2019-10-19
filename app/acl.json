@@ -11,7 +11,8 @@
     },
     "Register"  : ["logout"],
     "Tools"  : ["*"],
-    "Profile" : ["*"]
+    "Profile" : ["*"],
+    "Contacts" : ["*"]
   },
   "Gold"  : {
     "denied"  : {}

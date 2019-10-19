@@ -29,9 +29,10 @@
 
     public function find($params = [])
     {
+      $params = $this->_softDeleteParams($params); //delete if there is a problem!
       $results = [];
       $resultsQuery = $this->_db->find($this->_table, $params);
-      foreach ($resultsQuery as $result) {
+      foreach($resultsQuery as $result) {
         $obj = new $this->_modelName($this->_table);
         $obj->populateObj($result);
         $results[] = $obj;
@@ -41,6 +42,7 @@
 
     public function findFirst($params = [])
     {
+      $params = $this->_softDeleteParams($params); //delete if there is a problem!
       $resultsQuery = $this->_db->findFirst($this->_table, $params);
       $result = new $this->_modelName($this->_table);
       if($resultsQuery) {
@@ -132,4 +134,32 @@
       return $this->_db->lastInsertId();
     }
 
+    protected function _softDeleteParams($params)
+    {
+      // if($this->_softDelete) {
+      //   if(array_key_exists('conditions', $params)) {
+      //     if(is_array($params['conditions'])) {
+      //       $params['conditions'][] = "deleted != 1";
+      //     } else {
+      //       $params['conditions'] .= " AND deleted != 1";
+      //     }
+      //   } else {
+      //     $params['conditions'] = "deleted != 1";
+      //   }
+      // }
+      // return $params;
+      if($this->_softDelete) {
+        if(array_key_exists('conditions', $params)) {
+          if(is_array($params['conditions'])) {
+            $params['conditions'][] = 'deleted';
+          }
+          if(array_key_exists('bind', $params)) {
+            if(is_array($params['bind'])) {
+              $params['bind'][] = 0;
+            }
+          }
+        }
+      }
+      return $params;
+    }
   }
