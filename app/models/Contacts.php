@@ -9,7 +9,7 @@
         $this->_softDelete = true;
     }
 
-    public function findUserById($user_id, $orderParams = [])
+    public function findContactsById($user_id, $orderParams = [])
     {
       $params = [
         'conditions'  => ['user_id'],
@@ -18,7 +18,6 @@
       foreach($orderParams as $key => $value) {
         $params['order'][] = $value;
       }
-      //dnd($params);
       return $this->find($params);
     }
 
@@ -32,6 +31,7 @@
         $params['conditions'][] = $key;
         $params['bind'][] = $value;
       }
+      //dnd($params);
       return $this->findFirst($params);
     }
 

@@ -80,19 +80,39 @@
       return $this->_db->insert($this->_table, $fields);
     }
 
-    public function update($where = [], $fields)
+    // public function update($where = [], $fields)
+    // {
+    //   if(empty($fields)) {
+    //     return false;
+    //   }
+    //   if(empty($where)) {
+    //     return $this->_db->update($this->_table, ['id' => $this->id], $fields);
+    //   }
+    //   return $this->_db->update($this->_table, $where, $fields);
+    // }
+
+    //New update function without $where
+    public function update($fields)
     {
-      if(empty($fields) || empty($where)) return false;
-      return $this->_db->update($this->_table, $where, $fields);
+      if(empty($fields)) {
+        return false;
+      }
+      return $this->_db->update($this->_table, ['id' => $this->id], $fields);
     }
 
     public function delete($where = [])
     {
-      if(empty($where)) return false;
-      if($this->_softDelete) {
-        return $this->update($where, ['deleted' => 1]);
+      if(empty($where)) {
+        if($this->_softDelete) {
+          return $this->update(['deleted' => 1]);
+        }
+        return $this->_db->delete($this->_table, ['id' => $this->id]);
+      } else {
+        if($this->_softDelete) {
+          return $this->update($where, ['deleted' => 1]);
+        }
+        return $this->_db->delete($this->_table, $where);
       }
-      return $this->_db->delete($this->_table, $where);
     }
 
     public function query($sql, $bind)

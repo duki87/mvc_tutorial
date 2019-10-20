@@ -4,7 +4,6 @@
   {
     protected $_head, $_body, $_siteTitle = SITE_TITLE, $_outputBuffer, $_layout = DEFAULT_LAYOUT;
 
-
     public function __construct()
     {
 
