@@ -24,7 +24,7 @@
       return self::$_instance;
     }
 
-    public function query($sql, $params = [])
+    public function query($sql, $params = [], $class = false)
     {
       $this->_error = false;
       if($this->_query = $this->_pdo->prepare($sql))
@@ -39,9 +39,12 @@
           }
         }
 
-        if($this->_query->execute())
-        {
-          $this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);
+        if($this->_query->execute()) {
+          if($class) {
+            $this->_results = $this->_query->fetchAll(PDO::FETCH_CLASS, $class);
+          } else {
+            $this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);
+          }
           $this->_count = $this->_query->rowCount();
           $this->_lastInsertId = $this->_pdo->lastInsertId();
         }
@@ -153,24 +156,24 @@
       return $this->query("SHOW COLUMNS from {$table}")->results();
     }
 
-    public function find($table, $params = [])
+    public function find($table, $params = [], $class = false)
     {
       //dnd($params);
-      if($this->_read($table, $params)) {
+      if($this->_read($table, $params, $class)) {
         return $this->results();
       }
       return false;
     }
 
-    public function findFirst($table, $params = [])
+    public function findFirst($table, $params = [], $class = false)
     {
-      if($this->_read($table, $params)) {
+      if($this->_read($table, $params, $class)) {
         return $this->first();
       }
       return false;
     }
 
-    protected function _read($table, $params = [])
+    protected function _read($table, $params = [], $class)
     {
       $conditionString = '';
       $bind = [];
@@ -212,7 +215,7 @@
       }
       $sql = "SELECT * FROM {$table} {$conditionString} {$order} {$limit}";
       $sql = rtrim($sql, ' '); //delete if makes a problem
-      if($this->query($sql, $bind)) {
+      if($this->query($sql, $bind, $class)) {
         if(!count($this->_results)) return false;
         return true;
       }

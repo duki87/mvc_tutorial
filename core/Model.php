@@ -8,19 +8,20 @@
     {
       $this->_db = DB::getInstance();
       $this->_table = $table;
-      $this->_setTableColumns();
+      //$this->_setTableColumns();
       $this->_modelName = str_replace(' ', '', ucwords(str_replace('_',' ', $this->_table)));
     }
 
-    protected function _setTableColumns()
-    {
-      $columns = $this->getColumns();
-      foreach ($columns as $column) {
-        $columnName = $column->Field;
-        $this->_columnNames[] = $column->Field;
-        $this->{$columnName} = null;
-      }
-    }
+    //for delete
+    // protected function _setTableColumns()
+    // {
+    //   $columns = $this->getColumns();
+    //   foreach ($columns as $column) {
+    //     $columnName = $column->Field;
+    //     $this->_columnNames[] = $column->Field;
+    //     $this->{$columnName} = null;
+    //   }
+    // }
 
     public function getColumns()
     {
@@ -31,24 +32,26 @@
     {
       $params = $this->_softDeleteParams($params); //delete if there is a problem!
       $results = [];
-      $resultsQuery = $this->_db->find($this->_table, $params);
-      foreach($resultsQuery as $result) {
-        $obj = new $this->_modelName($this->_table);
-        $obj->populateObj($result);
-        $results[] = $obj;
-      }
-      return $results;
+      $resultsQuery = $this->_db->find($this->_table, $params, get_class($this));
+      // foreach($resultsQuery as $result) {
+      //   $obj = new $this->_modelName($this->_table);
+      //   $obj->populateObj($result);
+      //   $results[] = $obj;
+      // }
+      //return $results;
+      return $resultsQuery;
     }
 
     public function findFirst($params = [])
     {
       $params = $this->_softDeleteParams($params); //delete if there is a problem!
-      $resultsQuery = $this->_db->findFirst($this->_table, $params);
-      $result = new $this->_modelName($this->_table);
-      if($resultsQuery) {
-        $result->populateObj($resultsQuery);
-      }
-      return $result;
+      $resultsQuery = $this->_db->findFirst($this->_table, $params, get_class($this));
+      // $result = new $this->_modelName($this->_table);
+      // if($resultsQuery) {
+      //   $result->populateObj($resultsQuery);
+      // }
+      // return $result;
+      return $resultsQuery;
     }
 
     public function findById($id)
@@ -63,10 +66,13 @@
 
     public function save()
     {
-      $fields = [];
-      foreach($this->_columnNames as $column) {
-        $fields[$column] = $this->{$column};
-      }
+      //$fields = [];
+      $fields = getObjectProperties($this);
+
+      // foreach($this->_columnNames as $column) {
+      //   $fields[$column] = $this->{$column};
+      // }
+
       //Determine whether to update or insert new record
       if(property_exists($this, 'id') && $this->id != '') {
         return $this->update([$this->id], $fields);
@@ -79,17 +85,6 @@
       if(empty($fields)) return false;
       return $this->_db->insert($this->_table, $fields);
     }
-
-    // public function update($where = [], $fields)
-    // {
-    //   if(empty($fields)) {
-    //     return false;
-    //   }
-    //   if(empty($where)) {
-    //     return $this->_db->update($this->_table, ['id' => $this->id], $fields);
-    //   }
-    //   return $this->_db->update($this->_table, $where, $fields);
-    // }
 
     //New update function without $where
     public function update($fields)
@@ -123,8 +118,11 @@
     public function data()
     {
       $data = new stdClass();
-      foreach ($this->_columnNames as $column) {
-        $data->column = $this->column;
+      // foreach ($this->_columnNames as $column) {
+      //   $data->column = $this->column;
+      // }
+      foreach(getObjectProperties($this) as $key => $value) {
+        $data->key = $value;
       }
       return $data;
     }
@@ -133,7 +131,10 @@
     {
       if(!empty($params)) {
         foreach($params as $key => $value) {
-          if(in_array($key, $this->_columnNames)) {
+          // if(in_array($key, $this->_columnNames)) {
+          //   $this->{$key} = sanitize($value);
+          // }
+          if(property_exists($this, $key)) {
             $this->{$key} = sanitize($value);
           }
         }

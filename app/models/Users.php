@@ -2,6 +2,9 @@
 
   class Users extends Model
   {
+
+    public $id, $username, $email, $password, $fname, $lname, $acl, $deleted = 0;
+
     private $_isLoggedIn, $_sessionName, $_cookieName;
     public static $currentLoggedInUser = null;
     //public $id,$username,$email,$password,$fname,$lname,$acl,$deleted = 0;
@@ -15,9 +18,9 @@
       $this->_softDelete = true;
       if($user != '') {
         if(is_int($user)) {
-          $u = $this->_db->findFirst('users', ['conditions' => ['id'], 'bind' => [$user]]);
+          $u = $this->_db->findFirst('users', ['conditions' => ['id'], 'bind' => [$user]], 'Users');
         } else {
-          $u = $this->_db->findFirst('users', ['conditions' => ['username'], 'bind' => [$user]]);
+          $u = $this->_db->findFirst('users', ['conditions' => ['username'], 'bind' => [$user]], 'Users');
         }
         if($u) {
           foreach ($u as $key => $value) {
