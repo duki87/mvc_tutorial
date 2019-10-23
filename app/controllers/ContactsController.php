@@ -22,9 +22,9 @@
       $validation = new Validate();
       $postedValues = Input::formInputs(['fname', 'lname', 'email', 'address', 'city', 'zip', 'phone']);
       $contact = new Contacts();
-      if($_POST) {
+      if($_POST){
         $postedValues = Input::formInputs($_POST);
-        $validation->check($_POST, Contacts::$addValidation);
+        $validation->check($_POST, Contacts::$addValidation, true);
         if($validation->passed()) {
           $contact->assign($_POST);
           $contact->save();
@@ -73,9 +73,10 @@
       ]);
       if($_POST){
         $postedValues = Input::formInputs($_POST);
-        $validation->check($_POST, Contacts::$addValidation);
+        $validation->check($_POST, Contacts::$addValidation, true);
         if($validation->passed()) {
-          $contact->update($_POST);
+          $contact->assign($_POST);
+          $contact->update();
           Session::addSessionMessage('success', 'Contact data successfully updated.', 'Success!');
           Router::redirect('contacts');
         }

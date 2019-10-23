@@ -1,5 +1,6 @@
 <div class="errors" role="alert"><?=$this->displayErrors;?></div>
 <form class="" action="<?=$this->postAction;?>" method="post">
+  <?=FH::csrfInput();?>
   <div class="row">
     <?=inputBlock('hidden', '', 'user_id', currentUser()->id, ['srOnly' => 'false', 'class' => ''], ['class' => 'd-none']);?>
     <?=inputBlock('hidden', '', 'deleted', $this->post['deleted'], ['srOnly' => 'false', 'class' => ''], ['class' => 'd-none']);?>

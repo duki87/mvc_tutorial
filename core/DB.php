@@ -32,7 +32,6 @@
         $x = 1;
         if(count($params))
         {
-          //dnd($params);
           foreach($params as $param) {
             $this->_query->bindValue($x, $param);
             $x++;
@@ -75,7 +74,6 @@
       $fieldString = rtrim($fieldString, ',');
       $valueString = rtrim($valueString, ',');
       $sql = "INSERT INTO $table ({$fieldString}) VALUES ({$valueString})";
-      //dnd($values);
       if(!$this->query($sql, $values)->error()) {
         return true;
       }
@@ -123,8 +121,6 @@
       $fieldString = rtrim($fieldString, 'AND ');
       $fieldString = trim($fieldString, ' ');
       $sql = "DELETE FROM $table WHERE {$fieldString}";
-      //dnd($sql);
-      //dnd($values);
       if(!$this->query($sql, $values)->error()) {
         return true;
       }
@@ -158,7 +154,6 @@
 
     public function find($table, $params = [], $class = false)
     {
-      //dnd($params);
       if($this->_read($table, $params, $class)) {
         return $this->results();
       }

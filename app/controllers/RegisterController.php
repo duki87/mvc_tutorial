@@ -23,7 +23,7 @@
             'display'   =>  'Password',
             'required'  =>  true
           ]
-        ]);
+        ], true);
         if($validation->passed()) {
           $user = $this->UsersModel->findByUserName($_POST['username']);
           if($user && password_verify(Input::get('password'), $user->password)) {
@@ -88,7 +88,7 @@
             'required'  =>  true,
             'matches' => 'password'
           ]
-        ]);
+        ], true);
         if($validation->passed()) {
           $newUser = new Users();
           $newUser->register($_POST);

@@ -10,6 +10,7 @@
       <h4 class="card-title">Regiter New User</h4>
       <div class="errors" role="alert"><?=$this->displayErrors;?></div>
       <form class="form" action="<?=SITE_ROOT;?>register/register" method="post">
+        <?=FH::csrfInput();?>
         <div class="form-group">
           <label for="fname">First Name</label>
           <input type="text" name="fname" id="fname" class="form-control" value="<?=$this->post['fname'];?>">

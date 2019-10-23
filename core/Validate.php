@@ -9,9 +9,15 @@
       $this->_db = DB::getInstance();
     }
 
-    public function check($source, $items = [])
+    public function check($source, $items = [], $csrfCheck = false)
     {
       $this->_errors = [];
+      if($csrfCheck) {
+        $csrfCheck = FH::checkToken($source['csrf_token']);
+        if(!$csrfCheck) {
+          $this->addError(["Something has gone wrong!", 'csrf_token']);
+        }
+      }
       foreach($items as $item => $rules) {
         $item = Input::sanitize($item);
         $display = $rules['display'];

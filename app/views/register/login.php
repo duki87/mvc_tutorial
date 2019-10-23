@@ -10,6 +10,7 @@
       <h4 class="card-title">Login</h4>
       <div class="errors" role="alert"><?=$this->displayErrors;?></div>
       <form class="form" action="<?=SITE_ROOT;?>register/login" method="post">
+        <?=FH::csrfInput();?>
         <div class="form-group">
           <label for="">Username</label>
           <input type="text" name="username" id="username" value="" class="form-control">

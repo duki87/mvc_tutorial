@@ -8,20 +8,8 @@
     {
       $this->_db = DB::getInstance();
       $this->_table = $table;
-      //$this->_setTableColumns();
       $this->_modelName = str_replace(' ', '', ucwords(str_replace('_',' ', $this->_table)));
     }
-
-    //for delete
-    // protected function _setTableColumns()
-    // {
-    //   $columns = $this->getColumns();
-    //   foreach ($columns as $column) {
-    //     $columnName = $column->Field;
-    //     $this->_columnNames[] = $column->Field;
-    //     $this->{$columnName} = null;
-    //   }
-    // }
 
     public function getColumns()
     {
@@ -30,15 +18,9 @@
 
     public function find($params = [])
     {
-      $params = $this->_softDeleteParams($params); //delete if there is a problem!
+      $params = $this->_softDeleteParams($params);
       $results = [];
       $resultsQuery = $this->_db->find($this->_table, $params, get_class($this));
-      // foreach($resultsQuery as $result) {
-      //   $obj = new $this->_modelName($this->_table);
-      //   $obj->populateObj($result);
-      //   $results[] = $obj;
-      // }
-      //return $results;
       return $resultsQuery;
     }
 
@@ -46,11 +28,6 @@
     {
       $params = $this->_softDeleteParams($params); //delete if there is a problem!
       $resultsQuery = $this->_db->findFirst($this->_table, $params, get_class($this));
-      // $result = new $this->_modelName($this->_table);
-      // if($resultsQuery) {
-      //   $result->populateObj($resultsQuery);
-      // }
-      // return $result;
       return $resultsQuery;
     }
 
@@ -87,12 +64,13 @@
     }
 
     //New update function without $where
-    public function update($fields)
+    public function update($fields = [])
     {
       if(empty($fields)) {
-        return false;
+        return $this->_db->update($this->_table, ['id' => $this->id], $this);
+      } else {
+        return $this->_db->update($this->_table, ['id' => $this->id], $fields);
       }
-      return $this->_db->update($this->_table, ['id' => $this->id], $fields);
     }
 
     public function delete($where = [])
@@ -157,18 +135,6 @@
 
     protected function _softDeleteParams($params)
     {
-      // if($this->_softDelete) {
-      //   if(array_key_exists('conditions', $params)) {
-      //     if(is_array($params['conditions'])) {
-      //       $params['conditions'][] = "deleted != 1";
-      //     } else {
-      //       $params['conditions'] .= " AND deleted != 1";
-      //     }
-      //   } else {
-      //     $params['conditions'] = "deleted != 1";
-      //   }
-      // }
-      // return $params;
       if($this->_softDelete) {
         if(array_key_exists('conditions', $params)) {
           if(is_array($params['conditions'])) {
