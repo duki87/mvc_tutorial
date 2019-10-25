@@ -5,6 +5,15 @@
   //Load configuration and helper functions
   require_once ROOT . DS . 'config' . DS . 'config.php';
 
+  //Delete dnd when project is done
+  function dnd($data)
+  {
+    echo '<pre>';
+      var_dump($data);
+    echo '</pre>';
+    exit();
+  }
+
   function autoload($className) {
     if(file_exists(ROOT . DS . 'core' . DS . $className . '.php')) {
       require_once(ROOT . DS . 'core' . DS . $className . '.php');
@@ -12,6 +21,10 @@
       require_once(ROOT . DS . 'app' . DS . 'controllers' . DS . $className . '.php');
     } elseif(file_exists(ROOT . DS . 'app' . DS . 'models' . DS . $className . '.php')) {
       require_once(ROOT . DS . 'app' . DS . 'models' . DS . $className . '.php');
+    } elseif(file_exists(ROOT . DS . 'app' . DS . 'custom_validators' . DS . $className . '.php')) {
+      require_once(ROOT . DS . 'app' . DS . 'custom_validators' . DS . $className . '.php');
+    } elseif(file_exists(ROOT . DS . 'core' . DS . 'validators' . DS . $className . '.php')) {
+      require_once(ROOT . DS . 'core' . DS . 'validators' . DS . $className . '.php');
     } else {
       die('CONTROLLER_NOT_EXISTS');
     }

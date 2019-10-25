@@ -6,8 +6,14 @@
     {
       parent::__construct($controller, $action);
     }
+
     public function index()
     {
       $this->view->render('restricted/index');
+    }
+
+    public function bad_token()
+    {
+      $this->view->render('restricted/bad-token');
     }
   }

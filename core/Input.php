@@ -3,13 +3,17 @@
   class Input
   {
 
-    public static function get($input)
+    public function get($input = false)
     {
-      if(isset($_POST[$input])) {
-        return FH::sanitize($_POST[$input]);
-      } else if(isset($_GET[$input])) {
-        return FH::sanitize($_GET[$input]);
+      if(!$input) {
+        //return entire request array and sanitize it
+        $data = [];
+        foreach($_REQUEST as $field => $value) {
+          $data[$field] = FH::sanitize($value);
+        }
+        return $data;
       }
+      return FH::sanitize($_REQUEST[$input]);
     }
 
     public static function formInputs($inputs = [])
@@ -18,5 +22,33 @@
         $inputs[$key] = $value;
       }
       return $inputs;
+    }
+
+    public function isPost()
+    {
+      return $this->getRequestMethod() === 'POST';
+    }
+
+    public function isPut()
+    {
+      return $this->getRequestMethod() === 'PUT';
+    }
+
+    public function isGet()
+    {
+      return $this->getRequestMethod() === 'GET';
+    }
+
+    public function getRequestMethod()
+    {
+      return strtoupper($_SERVER['REQUEST_METHOD']);
+    }
+
+    public function csrfCheck()
+    {
+      if(!FH::checkToken($this->get('csrf_token'))) {
+        Router::redirect('restricted/bad_token');
+      }
+      return true;
     }
   }

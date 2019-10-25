@@ -1,7 +1,7 @@
 <?php
   class Model
   {
-    protected $_db, $_table, $_modelName, $_softDelete = false, $_columnNames = [];
+    protected $_db, $_table, $_modelName, $_softDelete = false, $_columnNames = [], $_validates = true, $_validationErrors = [];
     public $id;
 
     public function __construct($table)
@@ -43,18 +43,16 @@
 
     public function save()
     {
-      //$fields = [];
-      $fields = H::getObjectProperties($this);
-
-      // foreach($this->_columnNames as $column) {
-      //   $fields[$column] = $this->{$column};
-      // }
-
-      //Determine whether to update or insert new record
-      if(property_exists($this, 'id') && $this->id != '') {
-        return $this->update([$this->id], $fields);
+      $this->validator();
+      if($this->_validates) {
+        $fields = H::getObjectProperties($this);
+        //Determine whether to update or insert new record
+        if(property_exists($this, 'id') && $this->id != '') {
+          return $this->update([$this->id], $fields);
+        }
+        return $this->insert($fields);
       }
-      return $this->insert($fields);
+      return false;
     }
 
     public function insert($fields)
@@ -96,9 +94,6 @@
     public function data()
     {
       $data = new stdClass();
-      // foreach ($this->_columnNames as $column) {
-      //   $data->column = $this->column;
-      // }
       foreach(H::getObjectProperties($this) as $key => $value) {
         $data->key = $value;
       }
@@ -110,7 +105,7 @@
       if(!empty($params)) {
         foreach($params as $key => $value) {
           if(property_exists($this, $key)) {
-            $this->{$key} = FH::sanitize($value);
+            $this->{$key} = $value;
           }
         }
         return true;
@@ -145,5 +140,36 @@
         }
       }
       return $params;
+    }
+
+    public function validator()
+    {
+
+    }
+
+    public function runValidation($validator)
+    {
+      //H::dnd($validator->success);
+      $key = $validator->field;
+      if(!$validator->success) {
+        $this->_validates = false;
+        $this->_validationErrors[$key] = $validator->message;
+      }
+    }
+
+    public function getErrorMessages()
+    {
+      return $this->_validationErrors;
+    }
+
+    public function validationPassed()
+    {
+      return $this->_validates;
+    }
+
+    public function addErrorMessage($field, $message)
+    {
+      $this->_validates = false;
+      $this->_validationErrors[$field] = $message;
     }
   }

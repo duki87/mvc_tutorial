@@ -63,4 +63,18 @@
     {
       return htmlentities($dirty, ENT_QUOTES, 'UTF-8');
     }
+
+    public static function displayErrors($errors)
+    {
+      if(empty($errors)) {
+        return '';
+      }
+      $html = '<div class="alert alert-danger" role="alert"><ul class="">';
+      foreach ($errors as $field => $error) {
+        $html .= '<li class="">'.$error.'</li>';
+        $html .= '<script>$(document).ready(function(){ $("#'.$field.'").addClass("is-invalid"); });</script>';
+      }
+      $html .= '</div></ul>';
+      return $html;
+    }
   }

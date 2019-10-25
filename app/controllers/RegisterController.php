@@ -49,55 +49,72 @@
       Router::redirect('register/login');
     }
 
+    // public function register()
+    // {
+    //   $validation = new Validate();
+    //   $postedValues = Input::formInputs(['fname', 'lname', 'email', 'password', 'confirm']);
+    //   if($_POST) {
+    //     $postedValues = Input::formInputs($_POST);
+    //     //form validation
+    //     $validation->check($_POST, [
+    //       'fname' => [
+    //         'display' => 'First Name',
+    //         'required'  => true
+    //       ],
+    //       'lname' => [
+    //         'display' => 'Last Name',
+    //         'required'  => true
+    //       ],
+    //       'username'  =>  [
+    //         'display'   =>  'Username',
+    //         'required'  =>  true,
+    //         'unique'  => 'users',
+    //         'min' =>  6,
+    //         'max' =>  150
+    //       ],
+    //       'email'  =>  [
+    //         'display'   =>  'Email',
+    //         'required'  =>  true,
+    //         'unique'  => 'users',
+    //         'validEmail' =>true
+    //       ],
+    //       'password'  =>  [
+    //         'display'   =>  'Password',
+    //         'required'  =>  true,
+    //         'min' => 6
+    //       ],
+    //       'confirm'  =>  [
+    //         'display'   =>  'Confirm',
+    //         'required'  =>  true,
+    //         'matches' => 'password'
+    //       ]
+    //     ], true);
+    //     if($validation->passed()) {
+    //       $newUser = new Users();
+    //       $newUser->register($_POST);
+    //       $newUser->login();
+    //       Router::redirect('');
+    //     }
+    //   }
+    //   $this->view->displayErrors = $validation->displayErrors();
+    //   $this->view->post = $postedValues;
+    //   $this->view->render('register/register');
+    // }
+
     public function register()
     {
-      $validation = new Validate();
-      $postedValues = Input::formInputs(['fname', 'lname', 'email', 'password', 'confirm']);
-      if($_POST) {
-        $postedValues = Input::formInputs($_POST);
-        //form validation
-        $validation->check($_POST, [
-          'fname' => [
-            'display' => 'First Name',
-            'required'  => true
-          ],
-          'lname' => [
-            'display' => 'Last Name',
-            'required'  => true
-          ],
-          'username'  =>  [
-            'display'   =>  'Username',
-            'required'  =>  true,
-            'unique'  => 'users',
-            'min' =>  6,
-            'max' =>  150
-          ],
-          'email'  =>  [
-            'display'   =>  'Email',
-            'required'  =>  true,
-            'unique'  => 'users',
-            'validEmail' =>true
-          ],
-          'password'  =>  [
-            'display'   =>  'Password',
-            'required'  =>  true,
-            'min' => 6
-          ],
-          'confirm'  =>  [
-            'display'   =>  'Confirm',
-            'required'  =>  true,
-            'matches' => 'password'
-          ]
-        ], true);
-        if($validation->passed()) {
-          $newUser = new Users();
-          $newUser->register($_POST);
-          $newUser->login();
-          Router::redirect('');
+      $newUser = new Users();
+      if($this->request->isPost()) {
+        $this->request->csrfCheck();
+        $newUser->assign($this->request->get());
+        $newUser->setConfirm($this->request->get('confirm'));
+        if($newUser->save()) {
+          //$newUser->login();
+          Router::redirect('register/login');
         }
       }
-      $this->view->displayErrors = $validation->displayErrors();
-      $this->view->post = $postedValues;
+      $this->view->displayErrors = $newUser->getErrorMessages();
+      $this->view->newUser = $newUser;
       $this->view->render('register/register');
     }
   }
