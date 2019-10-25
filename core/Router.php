@@ -55,7 +55,7 @@
        $grantAccess = false;
        if(Session::exists(CURRENT_USER_SESSION_NAME)) {
          $currentUserAcls[] = 'LoggedIn';
-         foreach(currentUser()->acls() as $a) {
+         foreach(Users::currentUser()->acls() as $a) {
            $currentUserAcls[] = $a;
          }
        }

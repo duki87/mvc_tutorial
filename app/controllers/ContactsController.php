@@ -11,7 +11,7 @@
 
     public function index()
     {
-      $user_id = currentUser()->id;
+      $user_id = Users::currentUser()->id;
       $contacts = $this->ContactsModel->findContactsById($user_id, ['order' => 'lname, fname']);
       $this->view->contacts = $contacts;
       $this->view->render('contacts/index');
@@ -41,7 +41,7 @@
 
     public function details($user_id)
     {
-      $contact = $this->ContactsModel->findUserByIdAndUserId($user_id, currentUser()->id);
+      $contact = $this->ContactsModel->findUserByIdAndUserId($user_id, Users::currentUser()->id);
       if(!$contact) {
         Router::redirect('contacts');
       }
@@ -51,7 +51,7 @@
 
     public function delete($user_id)
     {
-      $contact = $this->ContactsModel->findUserByIdAndUserId($user_id, currentUser()->id);
+      $contact = $this->ContactsModel->findUserByIdAndUserId($user_id, Users::currentUser()->id);
       if($contact->id) {
         $contact->delete();
         Session::addSessionMessage('success', 'Contact successfully deleted.', 'Success!');
@@ -61,7 +61,7 @@
 
     public function edit($user_id)
     {
-      $contact = $this->ContactsModel->findUserByIdAndUserId($user_id, currentUser()->id);
+      $contact = $this->ContactsModel->findUserByIdAndUserId($user_id, Users::currentUser()->id);
       if(!$contact->id) {
         Router::redirect('contacts');
       }

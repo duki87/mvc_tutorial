@@ -4,10 +4,8 @@
   {
 
     public $id, $username, $email, $password, $fname, $lname, $acl, $deleted = 0;
-
     private $_isLoggedIn, $_sessionName, $_cookieName;
     public static $currentLoggedInUser = null;
-    //public $id,$username,$email,$password,$fname,$lname,$acl,$deleted = 0;
 
     public function __construct($user = '')
     {
@@ -71,7 +69,7 @@
       return true;
     }
 
-    public static function currentLoggedInUser()
+    public static function currentUser()
     {
       if(!isset(self::$currentLoggedInUser) && Session::exists(CURRENT_USER_SESSION_NAME)) {
         $u = new Users((int)Session::get(CURRENT_USER_SESSION_NAME));

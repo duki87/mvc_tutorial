@@ -44,7 +44,7 @@
     public function save()
     {
       //$fields = [];
-      $fields = getObjectProperties($this);
+      $fields = H::getObjectProperties($this);
 
       // foreach($this->_columnNames as $column) {
       //   $fields[$column] = $this->{$column};
@@ -99,7 +99,7 @@
       // foreach ($this->_columnNames as $column) {
       //   $data->column = $this->column;
       // }
-      foreach(getObjectProperties($this) as $key => $value) {
+      foreach(H::getObjectProperties($this) as $key => $value) {
         $data->key = $value;
       }
       return $data;
@@ -109,11 +109,8 @@
     {
       if(!empty($params)) {
         foreach($params as $key => $value) {
-          // if(in_array($key, $this->_columnNames)) {
-          //   $this->{$key} = sanitize($value);
-          // }
           if(property_exists($this, $key)) {
-            $this->{$key} = sanitize($value);
+            $this->{$key} = FH::sanitize($value);
           }
         }
         return true;

@@ -43,8 +43,8 @@
 
     public function logout()
     {
-      if(Users::currentLoggedInUser()) {
-        Users::currentLoggedInUser()->logout();
+      if(Users::currentUser()) {
+        Users::currentUser()->logout();
       }
       Router::redirect('register/login');
     }

@@ -58,4 +58,9 @@
     {
       return '<input type="hidden" value="'.self::generateToken().'" id="csrf_token" name="csrf_token">';
     }
+
+    public static function sanitize($dirty)
+    {
+      return htmlentities($dirty, ENT_QUOTES, 'UTF-8');
+    }
   }
