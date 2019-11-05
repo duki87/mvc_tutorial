@@ -47,8 +47,11 @@
 
     public static function showSessionMessage()
     {
-      $message = $_SESSION['sessionMessage'];
-      unset($_SESSION['sessionMessage']);
+      $message = '';
+      if(isset($_SESSION['sessionMessage'])) {
+        $message = $_SESSION['sessionMessage'];
+        unset($_SESSION['sessionMessage']);
+      }
       return $message;
     }
   }

@@ -3,6 +3,8 @@
   class Input
   {
 
+    public $inputs = [];
+
     public function get($input = false)
     {
       if(!$input) {
@@ -16,12 +18,17 @@
       return FH::sanitize($_REQUEST[$input]);
     }
 
-    public static function formInputs($inputs = [])
+    public function formInputs($inputs = [])
     {
-      foreach ($inputs as $key => $value) {
-        $inputs[$key] = $value;
+      foreach($inputs as $key => $value) {
+        $this->inputs[$key] = $value;
       }
-      return $inputs;
+    }
+
+    public function getInputValues($field)
+    {
+      //return $field;
+      return (array_key_exists($field, $this->inputs)) ? $this->inputs[$field] : '';
     }
 
     public function isPost()

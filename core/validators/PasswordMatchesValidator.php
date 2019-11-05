@@ -1,12 +1,12 @@
 <?php
 
-  class RequiredValidator extends MainValidator
+  class PasswordMatchesValidator extends MainValidator
   {
 
     public function runValidation()
     {
       $value = $this->_value;
-      $pass = (empty($value)) ? false : true;
+      $pass = $value == $this->_rule;
       return $pass;
     }
   }

@@ -5,6 +5,8 @@
    */
   class FH
   {
+    public $formErrors = [];
+
     public static function inputBlock($type, $label, $name, $value, $inputAttrs = [], $divAttrs = [])
     {
         $divString = self::stringifyAttrs($divAttrs);
@@ -75,6 +77,8 @@
         $html .= '<script>$(document).ready(function(){ $("#'.$field.'").addClass("is-invalid"); });</script>';
       }
       $html .= '</div></ul>';
+      Session::delete('formErrors');
       return $html;
     }
+
   }

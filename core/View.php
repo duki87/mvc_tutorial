@@ -3,6 +3,7 @@
   class View
   {
     protected $_head, $_body, $_siteTitle = SITE_TITLE, $_outputBuffer, $_layout = DEFAULT_LAYOUT;
+    public $formErrors = [], $formInputs = [];
 
     public function __construct()
     {
@@ -83,4 +84,5 @@
     {
       include ROOT . DS . 'app' . DS . 'views' . DS . $group . DS . 'partials' . DS . $partial . '.php';
     }
+
   }

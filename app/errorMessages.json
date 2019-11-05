@@ -1,0 +1,9 @@
+{
+  "required"  : "This field is required",
+  "min"  : "Minimum number of characters is",
+  "max"  : "Maximum number of characters is",
+  "validEmail"  : "Email format is not valid!",
+  "passwordMatches" : "Passwords do not match!",
+  "uniqueEmail"  : "Email must be unique!",
+  "uniqueUsername"  : "Username must be unique!"
+}

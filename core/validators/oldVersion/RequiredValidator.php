@@ -1,12 +1,13 @@
 <?php
 
-  class RequiredValidator extends MainValidator
+  class RequiredValidator extends CustomValidator
   {
 
     public function runValidation()
     {
-      $value = $this->_value;
+      $value = $this->_model->{$this->field};
       $pass = (empty($value)) ? false : true;
       return $pass;
     }
+
   }

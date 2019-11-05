@@ -23,4 +23,11 @@
     {
       return get_object_vars($object);
     }
+
+    public static function readFile($file)
+    {
+      $readFile = file_get_contents(ROOT . DS . 'app' . DS . $file);
+      $readFile = json_decode($readFile, true);
+      return $readFile;
+    }
   }

@@ -18,7 +18,11 @@
         if(is_int($user)) {
           $u = $this->_db->findFirst('users', ['conditions' => ['id'], 'bind' => [$user]], 'Users');
         } else {
-          $u = $this->_db->findFirst('users', ['conditions' => ['username'], 'bind' => [$user]], 'Users');
+          if(filter_var($user, FILTER_VALIDATE_EMAIL)) {
+            $u = $this->_db->findFirst('users', ['conditions' => ['email'], 'bind' => [$user]], 'Users');
+          } else {
+            $u = $this->_db->findFirst('users', ['conditions' => ['username'], 'bind' => [$user]], 'Users');
+          }      
         }
         if($u) {
           foreach ($u as $key => $value) {
@@ -28,26 +32,25 @@
       }
     }
 
-    public function validator()
-    {
-      $this->runValidation(new RequiredValidator($this, ['field' => 'fname', 'msg' => 'First name is required!']));
-      $this->runValidation(new RequiredValidator($this, ['field' => 'lname', 'msg' => 'Last name is required!']));
-
-      $this->runValidation(new RequiredValidator($this, ['field' => 'username', 'msg' => 'Username is required!']));
-      //Email
-      $this->runValidation(new RequiredValidator($this, ['field' => 'email', 'msg' => 'Email is required!']));
-      $this->runValidation(new EmailValidator($this, ['field' => 'email', 'msg' => 'Email is not valid!']));
-      $this->runValidation(new UniqueValidator($this, ['field' => 'email', 'msg' => 'Email must be unique! Try another one.']));
-      //Username
-      $this->runValidation(new MinValidator($this, ['field' => 'username', 'rule' => 6, 'msg' => 'Username must have at least 6 characters!']));
-      $this->runValidation(new MaxValidator($this, ['field' => 'username', 'rule' => 10, 'msg' => 'Username must be less than 10 characters!']));
-      $this->runValidation(new UniqueValidator($this, ['field' => 'username', 'msg' => 'Username must be unique! Try another one.']));
-      //Password
-      $this->runValidation(new MatchesValidator($this, ['field' => 'password', 'rule' => $this->_confirm, 'msg' => 'Passwords do not match!']));
-      $this->runValidation(new MinValidator($this, ['field' => 'password', 'rule' => 6, 'msg' => 'Password must have at least 6 characters!']));
-      $this->runValidation(new RequiredValidator($this, ['field' => 'password', 'msg' => 'Password is required!']));
-
-    }
+    // public function validator()
+    // {
+    //   $this->runValidation(new RequiredValidator($this, ['field' => 'fname', 'msg' => 'First name is required!']));
+    //   $this->runValidation(new RequiredValidator($this, ['field' => 'lname', 'msg' => 'Last name is required!']));
+    //
+    //   $this->runValidation(new RequiredValidator($this, ['field' => 'username', 'msg' => 'Username is required!']));
+    //   //Email
+    //   $this->runValidation(new RequiredValidator($this, ['field' => 'email', 'msg' => 'Email is required!']));
+    //   $this->runValidation(new EmailValidator($this, ['field' => 'email', 'msg' => 'Email is not valid!']));
+    //   $this->runValidation(new UniqueValidator($this, ['field' => 'email', 'msg' => 'Email must be unique! Try another one.']));
+    //   //Username
+    //   $this->runValidation(new MinValidator($this, ['field' => 'username', 'rule' => 6, 'msg' => 'Username must have at least 6 characters!']));
+    //   $this->runValidation(new MaxValidator($this, ['field' => 'username', 'rule' => 10, 'msg' => 'Username must be less than 10 characters!']));
+    //   $this->runValidation(new UniqueValidator($this, ['field' => 'username', 'msg' => 'Username must be unique! Try another one.']));
+    //   //Password
+    //   $this->runValidation(new MatchesValidator($this, ['field' => 'password', 'rule' => $this->_confirm, 'msg' => 'Passwords do not match!']));
+    //   $this->runValidation(new MinValidator($this, ['field' => 'password', 'rule' => 6, 'msg' => 'Password must have at least 6 characters!']));
+    //   $this->runValidation(new RequiredValidator($this, ['field' => 'password', 'msg' => 'Password is required!']));
+    // }
 
     public function findByUserName($username)
     {
@@ -67,16 +70,16 @@
       }
     }
 
-    public function register($params)
-    {
-      $this->assign($params);
-      $this->password = password_hash($this->password, PASSWORD_BCRYPT);
-      $this->deleted = 0;
-      if($this->save()) {
-        $this->id = $this->getLastInsertId();
-        return true;
-      }
-    }
+    // public function register($params)
+    // {
+    //   $this->assign($params);
+    //   $this->password = password_hash($this->password, PASSWORD_BCRYPT);
+    //   $this->deleted = 0;
+    //   if($this->save()) {
+    //     $this->id = $this->getLastInsertId();
+    //     return true;
+    //   }
+    // }
 
     public function logout()
     {
@@ -123,5 +126,10 @@
     public function getConfirm()
     {
       return $this->_confirm;
+    }
+
+    public function beforeSave()
+    {
+      $this->password = password_hash($this->password, PASSWORD_DEFAULT);
     }
   }

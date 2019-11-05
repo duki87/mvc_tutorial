@@ -1,12 +1,12 @@
 <?php
 
-  class MaxValidator extends CustomValidator
+  class MaxValidator extends MainValidator
   {
 
     public function runValidation()
     {
-      $value = $this->_model->{$this->field};
-      $pass = (strlen($value)) <= $this->rule;
+      $value = $this->_value;
+      $pass = (strlen($value)) <= $this->_rule;
       return $pass;
     }
   }
