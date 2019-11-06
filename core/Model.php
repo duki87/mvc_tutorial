@@ -41,7 +41,7 @@
       ]);
     }
 
-    public function save()
+/*     public function save()
     {
       $this->validator();
       if($this->_validates) {
@@ -58,6 +58,20 @@
         return $save;
       }
       return false;
+    } */
+
+    public function save()
+    {
+      $fields = H::getObjectProperties($this);
+      //Determine whether to update or insert new record
+      if(property_exists($this, 'id') && $this->id != '') {
+        $save = $this->update([$this->id], $fields);
+        $this->afterSave();
+        return $save;
+      }
+      $save = $this->insert($fields);
+      $this->afterSave();
+      return $save;
     }
 
     public function insert($fields)

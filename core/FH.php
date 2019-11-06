@@ -9,6 +9,8 @@
 
     public static function inputBlock($type, $label, $name, $value, $inputAttrs = [], $divAttrs = [])
     {
+        Session::delete($name);
+        Session::saveFormFieldNames($name, $label);
         $divString = self::stringifyAttrs($divAttrs);
         $inputString = self::stringifyAttrs($inputAttrs);
         $html = '<div'.$divString.'>';
@@ -64,21 +66,6 @@
     public static function sanitize($dirty)
     {
       return htmlentities($dirty, ENT_QUOTES, 'UTF-8');
-    }
-
-    public static function displayErrors($errors)
-    {
-      if(empty($errors)) {
-        return '';
-      }
-      $html = '<div class="alert alert-danger" role="alert"><ul class="">';
-      foreach ($errors as $field => $error) {
-        $html .= '<li class="">'.$error.'</li>';
-        $html .= '<script>$(document).ready(function(){ $("#'.$field.'").addClass("is-invalid"); });</script>';
-      }
-      $html .= '</div></ul>';
-      Session::delete('formErrors');
-      return $html;
     }
 
   }

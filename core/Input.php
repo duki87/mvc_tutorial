@@ -2,8 +2,8 @@
 
   class Input
   {
-
     public $inputs = [];
+    public static $previousValues = [];
 
     public function get($input = false)
     {
@@ -13,16 +13,17 @@
         foreach($_REQUEST as $field => $value) {
           $data[$field] = FH::sanitize($value);
         }
+        self::$previousValues = $data;
         return $data;
       }
       return FH::sanitize($_REQUEST[$input]);
     }
 
-    public function formInputs($inputs = [])
+    public static function getPreviousValues($field)
     {
-      foreach($inputs as $key => $value) {
-        $this->inputs[$key] = $value;
-      }
+      if(isset(self::$previousValues[$field])) {
+        return self::$previousValues[$field];
+      } 
     }
 
     public function getInputValues($field)

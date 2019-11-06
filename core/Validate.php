@@ -2,116 +2,27 @@
 
   class Validate
   {
-    private $_passed = false, $_errors = [], $_db = null;
-    protected $_errorFields = [], $_validates = true;
+    private $_passed = false, $_db = null;
+    protected $_errorFields = [], $_validates = false;
+    public static $errors = [];
 
     public function __construct()
     {
       $this->_db = DB::getInstance();
     }
 
-    // public function check($source, $items = [], $csrfCheck = false)
-    // {
-    //   $this->_errors = [];
-    //   if($csrfCheck) {
-    //     $csrfCheck = FH::checkToken($source['csrf_token']);
-    //     if(!$csrfCheck) {
-    //       $this->addError(["Something has gone wrong!", 'csrf_token']);
-    //     }
-    //   }
-    //   foreach($items as $item => $rules) {
-    //     $item = FH::sanitize($item);
-    //     $display = $rules['display'];
-    //     foreach($rules as $rule => $ruleValue) {
-    //       $value = FH::sanitize(trim($source[$item]));
-    //       if($rule === 'required' && empty($value)) {
-    //         $this->addError(["{$display} is required!", $item]);
-    //       } else if(!empty($value)) {
-    //         switch ($rule) {
-    //           case 'min':
-    //             if(strlen($value) < $ruleValue) {
-    //               $this->addError(["{$display} must have at least {$ruleValue} characters!", $item]);
-    //             }
-    //             break;
-    //           case 'max':
-    //             if(strlen($value) > $ruleValue) {
-    //               $this->addError(["{$display} must have less then {$ruleValue} characters!", $item]);
-    //             }
-    //             break;
-    //           case 'matches':
-    //             if($value != $source[$ruleValue]) {
-    //               $matchDisplay = $items[$ruleValue]['display'];
-    //               $this->addError(["{$matchDisplay} and {$display} must match!", $item]);
-    //             }
-    //             break;
-    //           case 'unique':
-    //             $check = $this->_db->query("SELECT {$item} FROM {$ruleValue} WHERE {$item} = ?", [$value]);
-    //             if($check->count()) {
-    //               $this->addError(["{$display} already exists! Please choose another {$display}", $item]);
-    //             }
-    //             break;
-    //           case 'uniqueUpdate':
-    //             $t = explode(',', $ruleValue);
-    //             $table = $t[0];
-    //             $id = $t[1];
-    //             $check = $this->_db->query("SELECT * FROM {$table} WHERE id != ? AND {$item} = ?", [$id, $value]);
-    //             if($check->count()) {
-    //               $this->addError(["{$display} already exists! Please choose another {$display}", $item]);
-    //             }
-    //             break;
-    //           case 'isNumeric':
-    //             if(!is_numeric($value)) {
-    //               $this->addError(["{$display} must be a numeric value!", $item]);
-    //             }
-    //             break;
-    //           case 'validEmail':
-    //             if(!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-    //               $this->addError(["{$display} must be a valid email address!", $item]);
-    //             }
-    //             break;
-    //           default:
-    //
-    //             break;
-    //         }
-    //       }
-    //     }
-    //   }
-    //   if(empty($this->_errors)) {
-    //     $this->_passed = true;
-    //   }
-    //   return $this;
-    // }
-
-    public function addError($error)
+    public static function displayErrors()
     {
-      $this->_errors[] = $error;
-      if(empty($this->_errors)) {
-        $this->_passed = true;
-      } else {
-        $this->_passed = false;
-      }
-    }
-
-    public function errors()
-    {
-      return $this->_errors;
-    }
-
-    public function displayErrors()
-    {
-      if(empty($this->_errors)) {
-        return '';
-      }
-      $html = '<div class="alert alert-danger" role="alert"><ul class="">';
-      foreach ($this->_errors as $error) {
-        if(is_array($error)) {
-          $html .= '<li class="">'.$error[0].'</li>';
-          $html .= '<script>$(document).ready(function(){ $("#'.$error[1].'").addClass("is-invalid"); });</script>';
-        } else {
+      $html = '';
+      if(!empty(self::$errors)) {
+        $html .= '<div class="alert alert-danger" role="alert"><ul class="">';
+        $errors = self::$errors;
+        foreach ($errors as $field => $error) {
           $html .= '<li class="">'.$error.'</li>';
+          $html .= '<script>$(document).ready(function(){ $("#'.$field.'").addClass("is-invalid"); });</script>';
         }
+        $html .= '</div></ul>';
       }
-      $html .= '</div></ul>';
       return $html;
     }
 
@@ -119,48 +30,56 @@
 
     public static function check($params = [])
     {
-      $errorMessages = H::readFile('errorMessages.json');
-      $validateClass = new self;
       $input = new Input();
-
-      $inputValues = $input->get();
-      $validateOptions = [];
-      foreach($params as $field => $rules) {
-        foreach($rules as $key => $value) {
-          $message = '';
-          if(filter_var($value, FILTER_VALIDATE_INT) === false) {
+      if($input->csrfCheck()) {
+        $errorMessages = H::readFile('errorMessages.json');
+        $validateClass = new self;
+        $inputValues = $input->get();
+        $validateOptions = [];
+        foreach($params as $field => $rules) {
+          foreach($rules as $key => $value) {
             $message = $errorMessages[$key];
-          } else {
-            $message = $errorMessages[$key] . ($value == 1 ? '!' : ' ' . $value . '!');
+            //Replace FIELD and VALUE words in message with corresponding values
+            $messageArray = explode(" ", $message);
+            if(in_array("FIELD", $messageArray)) {
+              $label = Session::getFormFieldNames($field);
+              $message = str_replace("FIELD", $label, $message);
+            }
+            if(in_array("VALUE", $messageArray)) {
+              $message = str_replace("VALUE", $value, $message);
+            }
+            $message .= '!';
+            $validatorClassName = ucwords($key).'Validator';
+            $validateClass->runValidation(new $validatorClassName([
+              'value' => $inputValues[$field],
+              'rule' => (is_int($value) || is_bool($value)) ? $value : $inputValues[$value],
+              'field' => $field,
+              'msg' => $message
+            ]));
           }
-          $validatorClassName = ucwords($key).'Validator';
-          //$validateOptions[] = ['field' => $field, 'value' => $inputValues[$field], 'rule' => $value, 'validatorClass' => $validatorClassName, 'msg' => $message];
-          $validateClass->runValidation(new $validatorClassName(['value' => $inputValues[$field], 'rule' => $value, 'field' => $field, 'msg' => $message]));
         }
       }
-      //H::dnd($validateClass->_errorFields);
     }
 
     public function runValidation($validator)
     {
-      //H::dnd($validator->success);
       $key = $validator->_field;
       if(!$validator->success) {
         $this->_validates = false;
         if(!isset($this->_errorFields[$key])) {
-          $this->_errorFields[$key] = $validator->message;
+          self::$errors[$key] = $validator->message;
         }
-      }
-      Session::set('formErrors', $this->_errorFields);
+      } else {
+      Session::set('formErrors', self::$errors);
     }
 
     public function fails()
     {
-      return $this->_validates;
+      return !empty(self::$errors) ? true : false;
     }
 
     public function passed()
     {
-      return $this->_validates;
+      return empty(self::$errors) ? true : false;
     }
   }
