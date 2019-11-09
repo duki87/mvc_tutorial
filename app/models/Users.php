@@ -41,25 +41,16 @@
     {
       Session::set($this->_sessionName, $this->id);
       if($remember_me) {
-        $hash = md5(uniqid() + rand(0, 100));
+        $hash = Hash::makeRandomHash();
+        //H::dnd($hash);
         $user_agent = Session::uagent_no_version();
         Cookie::set($this->_cookieName, $hash, REMEMBER_COOKIE_EXPIRE);
         $fields = ['session' => $hash, 'user_agent' => $user_agent, 'user_id' => $this->id];
+        //H::dnd($fields);
         $this->_db->query("DELETE FROM user_sessions WHERE user_id = ? AND user_agent = ?", [$this->id, $user_agent]);
         $this->_db->insert('user_sessions', $fields);
       }
     }
-
-    // public function register($params)
-    // {
-    //   $this->assign($params);
-    //   $this->password = password_hash($this->password, PASSWORD_BCRYPT);
-    //   $this->deleted = 0;
-    //   if($this->save()) {
-    //     $this->id = $this->getLastInsertId();
-    //     return true;
-    //   }
-    // }
 
     public function logout()
     {
@@ -110,6 +101,6 @@
 
     public function beforeSave()
     {
-      $this->password = password_hash($this->password, PASSWORD_DEFAULT);
+      //$this->password = password_hash($this->password, PASSWORD_DEFAULT);
     }
   }

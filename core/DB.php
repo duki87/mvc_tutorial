@@ -92,7 +92,7 @@
         echo $value . '<br>';
       }
 
-      foreach ($where as $column => $colValue) {
+      foreach($where as $column => $colValue) {
         $whereString .= '`' . $column . '` = ? AND ';
         $values[] = $colValue;
         echo $colValue . '<br>';
@@ -102,7 +102,6 @@
       $fieldString = rtrim($fieldString, ',');
       $fieldString = trim($fieldString, ' ');
       $sql = "UPDATE $table SET {$fieldString} WHERE {$whereString}";
-      //dnd($sql);
       if(!$this->query($sql, $values)->error()) {
         return true;
       }

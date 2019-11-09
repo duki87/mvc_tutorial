@@ -17,9 +17,15 @@
       //ACL check
       $grantAccess = self::hasAccess($controller_name, $action_name);
       if(!$grantAccess) {
-        $controller = ACCESS_RESTRICTED.'Controller';
+        Session::addSessionMessage(
+          'danger', 
+          'You are not allowed to access requested page. Login <a href="'.SITE_ROOT.'register/login">here</a> to grant access.', 
+          'Warning!'
+        );
+        self::back();
+/*         $controller = ACCESS_RESTRICTED.'Controller';
         $controller_name = ACCESS_RESTRICTED;
-        $action = 'index';
+        $action = 'index'; */
       }
 
       //url params
@@ -45,6 +51,19 @@
         echo '</noscript>';
         exit();
       }
+    }
+
+    public static function back()
+    {
+      if(isset($_SERVER["HTTP_REFERER"])) {
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+      } else { 
+        echo '<script type="text/javascript">';
+        echo 'history.back();';
+        echo '</script>';
+        exit();
+      }
+      exit();
     }
 
     public static function hasAccess($controller_name, $action_name = 'index')

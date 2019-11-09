@@ -43,36 +43,20 @@
     {
       $validation = new Validate();
       if($this->request->isPost()) {
-        $validate::check([
-          'username' =>  ['required' => true],
-          'password' =>  ['required' => true]
+        $validation::check([
+          'username' =>  ['required' => true, 'min' => 6, 'max' => 10],
+          'password' =>  ['required' => true, 'min' => 6]
         ]);
-      }
-      if($this->request->isPost()) {
-        //form validation
-        $validation->check($_POST, [
-          'username'  =>  [
-            'display'   =>  'Username',
-            'required'  =>  true,
-          ],
-          'password'  =>  [
-            'display'   =>  'Password',
-            'required'  =>  true
-          ]
-        ], true);
         if($validation->passed()) {
-          $user = $this->UsersModel->findByUserName($_POST['username']);
-          if($user && password_verify(Input::get('password'), $user->password)) {
-            $remember = (isset($_POST['remember_me']) && Input::get('remember_me')) ? true : false;
-            $user->login($remember);
+          $user = $this->UsersModel->findByUserName(($this->request->get('username')));
+          if($user && Hash::check($this->request->get('password'), $user->password)) {
+            $user = new Users($user->id);
+            $user->login($this->request->get('remember_me'));
             Router::redirect('');
           } else {
-            $validation->addError('There is an error with your username or password!');
-            $this->view->displayErrors = $validation->displayErrors();
-          }
-        } else {
-          $this->view->displayErrors = $validation->displayErrors();
-        }
+            $validation::makeCustomError('wrongPassword', 'You have entered wrong password!');
+          }         
+        }    
       }
       $this->view->render('register/login');
     }
