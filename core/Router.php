@@ -1,5 +1,10 @@
 <?php
 
+  namespace Core;
+  use Core\Session;
+  use Core\View;
+  use App\Models\Users;
+
   class Router
   {
     public static function route($url)
@@ -18,18 +23,16 @@
       $grantAccess = self::hasAccess($controller_name, $action_name);
       if(!$grantAccess) {
         Session::addSessionMessage(
-          'danger', 
-          'You are not allowed to access requested page. Login <a href="'.SITE_ROOT.'register/login">here</a> to grant access.', 
+          'danger',
+          'You are not allowed to access requested page. Login <a href="'.SITE_ROOT.'register/login">here</a> to grant access.',
           'Warning!'
         );
         self::back();
-/*         $controller = ACCESS_RESTRICTED.'Controller';
-        $controller_name = ACCESS_RESTRICTED;
-        $action = 'index'; */
       }
 
       //url params
       $queryParams = $url;
+      $controller = 'App\Controllers\\' . $controller;
       $dispatch = new $controller($controller_name, $action);
       if(method_exists($controller, $action)) {
         call_user_func_array([$dispatch, $action], $queryParams);
@@ -57,7 +60,7 @@
     {
       if(isset($_SERVER["HTTP_REFERER"])) {
         header('Location: ' . $_SERVER['HTTP_REFERER']);
-      } else { 
+      } else {
         echo '<script type="text/javascript">';
         echo 'history.back();';
         echo '</script>';

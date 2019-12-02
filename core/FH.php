@@ -1,8 +1,8 @@
 <?php
 
-  /**
-   *Form helepers class
-   */
+  namespace Core;
+  use Core\Session;
+
   class FH
   {
     public $formErrors = [];

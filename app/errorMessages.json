@@ -6,5 +6,6 @@
   "passwordMatches" : "Passwords do not match",
   "uniqueEmail"  : "Email must be unique",
   "uniqueUsername"  : "Username must be unique",
-  "wrongPassword"  : "You have entered wrong password"
+  "wrongPassword"  : "You have entered wrong password",
+  "numeric" : "This value must be numeric"
 }

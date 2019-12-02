@@ -1,5 +1,12 @@
 <?php
 
+  namespace App\Models;
+  use Core\Model;
+  use Core\Cookie;
+  use Core\Session;
+  use App\Models\UserSessions;
+  use Core\Hash;
+
   class Users extends Model
   {
 
@@ -16,13 +23,16 @@
       $this->_softDelete = true;
       if($user != '') {
         if(is_int($user)) {
-          $u = $this->_db->findFirst('users', ['conditions' => ['id'], 'bind' => [$user]], 'Users');
+          //$u = $this->_db->findFirst('users', ['conditions' => ['id'], 'bind' => [$user]], 'Users');
+          $u = $this->_db->findFirst('users', ['conditions' => ['id'], 'bind' => [$user]], 'App\Models\Users');
         } else {
           if(filter_var($user, FILTER_VALIDATE_EMAIL)) {
-            $u = $this->_db->findFirst('users', ['conditions' => ['email'], 'bind' => [$user]], 'Users');
+            //$u = $this->_db->findFirst('users', ['conditions' => ['email'], 'bind' => [$user]], 'Users');
+            $u = $this->_db->findFirst('users', ['conditions' => ['email'], 'bind' => [$user]], 'App\Models\Users');
           } else {
-            $u = $this->_db->findFirst('users', ['conditions' => ['username'], 'bind' => [$user]], 'Users');
-          }      
+            //$u = $this->_db->findFirst('users', ['conditions' => ['username'], 'bind' => [$user]], 'Users');
+            $u = $this->_db->findFirst('users', ['conditions' => ['username'], 'bind' => [$user]], 'App\Models\Users');
+          }
         }
         if($u) {
           foreach ($u as $key => $value) {
@@ -42,11 +52,9 @@
       Session::set($this->_sessionName, $this->id);
       if($remember_me) {
         $hash = Hash::makeRandomHash();
-        //H::dnd($hash);
         $user_agent = Session::uagent_no_version();
         Cookie::set($this->_cookieName, $hash, REMEMBER_COOKIE_EXPIRE);
         $fields = ['session' => $hash, 'user_agent' => $user_agent, 'user_id' => $this->id];
-        //H::dnd($fields);
         $this->_db->query("DELETE FROM user_sessions WHERE user_id = ? AND user_agent = ?", [$this->id, $user_agent]);
         $this->_db->insert('user_sessions', $fields);
       }

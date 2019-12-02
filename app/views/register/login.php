@@ -1,3 +1,8 @@
+<?php
+  use Core\Validate;
+  use Core\Input;
+  use Core\FH;
+?>
 <?php $this->start('head');?>
 
 <?php $this->end();?>

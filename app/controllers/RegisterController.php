@@ -1,5 +1,13 @@
 <?php
 
+  namespace App\Controllers;
+  use Core\Controller;
+  use App\Models\Users;
+  use Core\Validate;
+  use Core\Session;
+  use Core\Router;
+  use Core\Hash;
+
   class RegisterController extends Controller
   {
     public function __construct($controller, $action)
@@ -55,8 +63,8 @@
             Router::redirect('');
           } else {
             $validation::makeCustomError('wrongPassword', 'You have entered wrong password!');
-          }         
-        }    
+          }
+        }
       }
       $this->view->render('register/login');
     }

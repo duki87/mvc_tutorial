@@ -1,4 +1,9 @@
 <?php
+
+  namespace Core;
+  use Core\H;
+  // use Core\Router;
+
   class Model
   {
     protected $_db, $_table, $_modelName, $_softDelete = false, $_columnNames = [], $_validates = true, $_validationErrors = [];
@@ -41,25 +46,6 @@
       ]);
     }
 
-/*     public function save()
-    {
-      $this->validator();
-      if($this->_validates) {
-        $this->beforeSave();
-        $fields = H::getObjectProperties($this);
-        //Determine whether to update or insert new record
-        if(property_exists($this, 'id') && $this->id != '') {
-          $save = $this->update([$this->id], $fields);
-          $this->afterSave();
-          return $save;
-        }
-        $save = $this->insert($fields);
-        $this->afterSave();
-        return $save;
-      }
-      return false;
-    } */
-
     public function save()
     {
       $fields = H::getObjectProperties($this);
@@ -84,6 +70,7 @@
     public function update($fields = [])
     {
       if(empty($fields)) {
+        //H::dnd($this);
         return $this->_db->update($this->_table, ['id' => $this->id], $this);
       } else {
         return $this->_db->update($this->_table, ['id' => $this->id], $fields);

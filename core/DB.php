@@ -1,4 +1,11 @@
 <?php
+
+  namespace Core;
+  use \PDO;
+  use \PDOException;
+  use App\Models\Users;
+  use Core\H;
+
   class DB
   {
     private static $_instance = null;
@@ -19,13 +26,14 @@
     {
       if(!isset(self::$_instance))
       {
-        self::$_instance = new DB();
+        self::$_instance = new self();
       }
       return self::$_instance;
     }
 
     public function query($sql, $params = [], $class = false)
     {
+      //$class = 'App\Models\\' . $class;
       $this->_error = false;
       if($this->_query = $this->_pdo->prepare($sql))
       {
@@ -86,10 +94,13 @@
       $whereValues = [];
       $fieldString = '';
       $values = [];
-      foreach ($fields as $field => $value) {
+      foreach($fields as $field => $value) {
+        if($field === 'id') {
+          continue;
+        }
         $fieldString .= ' `' . $field . '` = ?,';
         $values[] = $value;
-        echo $value . '<br>';
+        //echo $value . '<br>';
       }
 
       foreach($where as $column => $colValue) {

@@ -1,5 +1,11 @@
 <?php
 
+  namespace Core;
+  use Core\Session;
+  use Core\DB;
+  use Core\Input;
+  use Core\H;
+
   class Validate
   {
     private $_passed = false, $_db = null;
@@ -36,8 +42,9 @@
         foreach($params as $field => $rules) {
           foreach($rules as $key => $value) {
             $message = self::getErrorMessage($key, $field, $value);
-            $validatorClassName = ucwords($key).'Validator';
-            $validateClass->runValidation(new $validatorClassName([
+            $validatorClassName = 'Core\Validators\\' . ucwords($key).'Validator';
+            $validateClass->runValidation(new  $validatorClassName([
+            //$validateClass->runValidation(new $validatorClassName([
               'value' => $inputValues[$field],
               'rule' => (is_int($value) || is_bool($value)) ? $value : $inputValues[$value],
               'field' => $field,
@@ -80,7 +87,7 @@
         if(!isset(self::$errors[$key])) {
           self::$errors[$key] = $validator->message;
         }
-      } 
+      }
     }
 
     public function fails()

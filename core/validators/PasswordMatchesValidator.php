@@ -1,5 +1,8 @@
 <?php
 
+  namespace Core\Validators;
+  use Core\Validators\MainValidator;
+
   class PasswordMatchesValidator extends MainValidator
   {
 

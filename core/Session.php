@@ -1,4 +1,7 @@
 <?php
+
+  namespace Core;
+
   class Session
   {
 
@@ -56,17 +59,17 @@
     }
 
     //Session functions for temporary storing label names of form fields
-    public static function saveFormFieldNames($field, $name) 
+    public static function saveFormFieldNames($field, $name)
     {
       $_SESSION['formFieldNames'][$field] = $name;
     }
 
-    public static function getFormFieldNames($field) 
+    public static function getFormFieldNames($field)
     {
       return $_SESSION['formFieldNames'][$field];
     }
 
-    public static function deletetFormField($field) 
+    public static function deletetFormField($field)
     {
       unset($_SESSION['formFieldNames'][$field]);
     }

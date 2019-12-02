@@ -1,4 +1,9 @@
 <?php
+  use Core\Session;
+  use Core\Router;
+  use Core\Cookie;
+  use App\Models\Users;
+
   define('DS', DIRECTORY_SEPARATOR);
   define('ROOT', dirname(__FILE__));
 
@@ -15,18 +20,12 @@
   }
 
   function autoload($className) {
-    if(file_exists(ROOT . DS . 'core' . DS . $className . '.php')) {
-      require_once(ROOT . DS . 'core' . DS . $className . '.php');
-    } elseif(file_exists(ROOT . DS . 'app' . DS . 'controllers' . DS . $className . '.php')) {
-      require_once(ROOT . DS . 'app' . DS . 'controllers' . DS . $className . '.php');
-    } elseif(file_exists(ROOT . DS . 'app' . DS . 'models' . DS . $className . '.php')) {
-      require_once(ROOT . DS . 'app' . DS . 'models' . DS . $className . '.php');
-    } elseif(file_exists(ROOT . DS . 'app' . DS . 'custom_validators' . DS . $className . '.php')) {
-      require_once(ROOT . DS . 'app' . DS . 'custom_validators' . DS . $className . '.php');
-    } elseif(file_exists(ROOT . DS . 'core' . DS . 'validators' . DS . $className . '.php')) {
-      require_once(ROOT . DS . 'core' . DS . 'validators' . DS . $className . '.php');
-    } else {
-      die('CONTROLLER_NOT_EXISTS');
+    $classArray = explode('\\', $className);
+    $class = array_pop($classArray);
+    $subPath = strtolower(implode(DS, $classArray));
+    $path = ROOT . DS . $subPath . DS . $class . '.php';
+    if(file_exists($path)) {      
+      require_once($path);
     }
   }
   spl_autoload_register('autoload');

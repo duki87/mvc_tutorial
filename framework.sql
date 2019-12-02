@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 26, 2019 at 12:37 AM
+-- Generation Time: Dec 02, 2019 at 11:19 PM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -48,7 +48,7 @@ CREATE TABLE `contacts` (
 INSERT INTO `contacts` (`id`, `user_id`, `fname`, `lname`, `email`, `address`, `city`, `zip`, `phone`, `deleted`) VALUES
 (1, 2, 'Djoka', 'Djokic', 'djokica@gmail.com', 'Djokina 85', 'Djokingrad', '11453', '+3812523456', 0),
 (2, 1, 'Mika', 'Mikic', 'mikica@gmail.com', 'Mikicina 35', 'Novi Sad', '21000', '+3812523477', 0),
-(3, 1, 'Sanja', 'Antonijevic', 'sanjaantonijevic1@gmail.com', 'Brace Badzak 93', 'Mladenovac', '11400', '+381642819366', 0),
+(3, 1, 'Sanja', 'Antonijevic', 'sanjaantonijevic1@gmail.com', 'Brace Badzak 93', 'Mladenovac', '11400', '+38164281458', 0),
 (7, 2, 'Zika', 'Zikic', 'zika@gmail.com', 'Zikina 46', 'Palanka', '11420', '06458255', 0),
 (8, 1, 'Pera', 'Peric', 'pera@gmail.com', 'Perina 12', 'Pozarevac', '13000', '0645824685', 0),
 (12, 1, 'hgjghj', 'ghjghjghj', 'ghj@fg.com', 'gdfgdfg 64', 'dfgdfgdfg', '34534534', '4353535345', 1),
@@ -58,7 +58,10 @@ INSERT INTO `contacts` (`id`, `user_id`, `fname`, `lname`, `email`, `address`, `
 (16, 1, 'Djole', 'Djokic', 'djole@gmail.com', 'Petrova 46', 'Kupusina', '11456', '+38163201366', 0),
 (17, 1, 'dfgdfg', 'dgdfg', 'a@g.com', 'sdfsdf 54', 'dfgdfgdfg', '324234', '435435345', 1),
 (18, 1, 'Tole', 'Lopove', 'tolelopove@gmail.com', 'Toletova 13', 'Tolovgrad', '11255', '+381655487896', 0),
-(19, 1, 'Zile', 'dfgdfgdf', 'aaa@g.com', 'sfsdf 35', 'sgsfgsgf', '21478', '+4235243123424', 1);
+(19, 1, 'Zile', 'dfgdfgdf', 'aaa@g.com', 'sfsdf 35', 'sgsfgsgf', '21478', '+4235243123424', 1),
+(20, 1, 'Tole', 'Lopov', 'tolelopove@gmail.com', 'Toletova 13', 'Tolovgrad', '11255', '+381655487896', 0),
+(21, 1, 'Uros', 'Peric', 'up@gmail.com', 'Peroviceva 25', 'Petlovo', '12345', '066543387', 0),
+(22, 1, 'Lola', 'Lolic', 'lola@gmail.com', 'Lolina 12', 'Lolovo', '13452', '0677234521', 0);
 
 -- --------------------------------------------------------
 
@@ -85,7 +88,12 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `fname`, `lname`, `a
 (1, 'duki87', 'duki@gmail.com', '$2y$10$TX8TlB3hBdmgoHO3M/gUeu59DsRzQ/V1fkAHI3/12v8kGRyLLzC2K', 'Dusan', 'Marinkovic', NULL, 0),
 (2, 'gigica', 'gigi@gmail.com', '$2y$10$2Cr2ZMNF1FHb0eQ3G/xukOXrmsYXVNmx/In8ywV2RRfbIotWcucdq', 'Gigi', 'Gigic', NULL, 0),
 (3, 'MikiDjoki', 'mikidjoki@gmail.com', '$2y$10$kXuXNDSq.V6UZwEfRVm3G.BGB.IgTeE6VEXeeMkavAZWZmT3HtPsW', 'Mikica', 'Djokic', NULL, 0),
-(4, 'fdfdfdff', '', '', '', '', NULL, 0);
+(7, 'Djokica76', 'djokica@gmail.com', '$2y$10$c4Bl7zw6tOXqgi65eG3mj.aOLfjpv6M9z7kvnp7lH6efx6r5JdlDm', 'Djoka', 'Djokic', NULL, 0),
+(8, 'perica', 'perica@gmail.com', '$2y$10$Xy68BUaskQkjBBICYascNOAYvsPOuSJi3MN3nWBNgbTO3xvh9OL2W', 'Perica', 'Peric', NULL, 0),
+(9, 'radojica', 'rade@gmail.com', '$2y$10$kbvk8r2EbKNPhkOScDBfeuaRPmkEKdChmuegfn8aPxdfqrY298KHq', 'Rade', 'Radic', NULL, 0),
+(19, 'duki_87', 'dusan@yandex.com', '$2y$10$wDKNHMNQAMXKDtLZ4y2tSuTC1afSSf9FLNQmzceX0nu4GtYzOFKt2', 'Dusan', 'Marinkovic', NULL, 0),
+(26, 'gigica16', 'gigi@yandex.com', '$2y$10$gVcIIjMb4Kp7uoKDVY.5WOixmfgN3eqTegmQ.5pecNIEFYPVyQa1y', 'Gigi', 'Gigica', NULL, 0),
+(27, 'Djokica88', 'djokson@gmail.com', '$2y$10$lwAAHqZRChCDbU06AtpKreZ9l5r0cU7B2LDRFE4PLCPYiwzl0pbk.', 'Djokica', 'Djokic', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -139,13 +147,13 @@ ALTER TABLE `user_sessions`
 -- AUTO_INCREMENT for table `contacts`
 --
 ALTER TABLE `contacts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `user_sessions`

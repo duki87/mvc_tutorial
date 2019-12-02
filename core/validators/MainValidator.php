@@ -1,5 +1,8 @@
 <?php
 
+namespace Core\Validators;
+use \Exception;
+
   abstract class MainValidator
   {
     public $success = true, $message = '', $_value, $_field, $_rule;

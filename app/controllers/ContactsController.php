@@ -1,5 +1,15 @@
 <?php
 
+  namespace App\Controllers;
+  use Core\Controller;
+  use App\Models\Users;
+  use App\Models\Contacts;
+  use Core\Validate;
+  use Core\Input;
+  use Core\Session;
+  use Core\Router;
+  use Core\H;
+
   class ContactsController extends Controller
   {
     public function __construct($controller, $action)
@@ -19,23 +29,25 @@
 
     public function add()
     {
-      $validation = new Validate();
-      $postedValues = Input::formInputs(['fname', 'lname', 'email', 'address', 'city', 'zip', 'phone']);
-      $contact = new Contacts();
-      if($_POST){
-        $postedValues = Input::formInputs($_POST);
-        $validation->check($_POST, Contacts::$addValidation, true);
-        if($validation->passed()) {
-          $contact->assign($_POST);
-          $contact->save();
-          Session::addSessionMessage('success', 'Contact successfully created.', 'Success!');
+      $validate = new Validate();
+      if($this->request->isPost()) {
+        $validate::check([
+          'fname'    =>  ['required' => true, 'max' => 155],
+          'lname'    =>  ['required' => true, 'max' => 155],
+          'email'    =>  ['required' => true, 'validEmail' => true, 'uniqueEmail' => true],
+          'address'    =>  ['required' => true, 'min' => 5, 'max' => 155],
+          'city'    =>  ['required' => true, 'min' => 2, 'max' => 155],
+          'zip'    =>  ['required' => true, 'numeric' => true],
+          'phone'    =>  ['required' => true, 'numeric' => true]
+        ]);
+        if($validate->passed()) {
+          $newContact = new Contacts();
+          $newContact->assign($this->request->get());
+          $newContact->save();
+          Session::addSessionMessage('success', 'Contact added.', 'Success!');
           Router::redirect('contacts');
         }
       }
-      $this->view->contact = $contact;
-      $this->view->displayErrors = $validation->displayErrors();
-      $this->view->post = $postedValues;
-      $this->view->postAction = SITE_ROOT . 'contacts' . DS . 'add';
       $this->view->render('contacts/add');
     }
 
@@ -59,33 +71,43 @@
       Router::redirect('contacts');
     }
 
-    public function edit($user_id)
+    public function edit($contact_id)
     {
-      $contact = $this->ContactsModel->findUserByIdAndUserId($user_id, Users::currentUser()->id);
-      if(!$contact->id) {
-        Router::redirect('contacts');
+      if($contact_id) {
+        $contact = $this->ContactsModel->findUserByIdAndUserId($contact_id, Users::currentUser()->id);
+        if(!$contact->id) {
+          Session::addSessionMessage('danger', 'Contact do not exist.', 'Error!');
+          Router::redirect('contacts');
+        }
       }
-      $validation = new Validate();
-      $postedValues = Input::formInputs([
-        'id' => $contact->id, 'user_id' => $contact->user_id, 'fname' => $contact->fname, 'lname' => $contact->lname,
-        'email' => $contact->email, 'address' => $contact->address, 'city' => $contact->city, 'zip' => $contact->zip,
-        'phone' => $contact->phone, 'deleted' => $contact->deleted
-      ]);
-      if($_POST){
-        $postedValues = Input::formInputs($_POST);
-        $validation->check($_POST, Contacts::$addValidation, true);
-        if($validation->passed()) {
-          $contact->assign($_POST);
+      if($this->request->isGet()) {
+        Input::setPreviousValues($contact);
+      }
+      $validate = new Validate();
+      if($this->request->isPost()) {
+        $validate::check([
+          'fname'    =>  ['required' => true, 'max' => 155],
+          'lname'    =>  ['required' => true, 'max' => 155],
+          'email'    =>  ['required' => true, 'validEmail' => true, 'uniqueEmail' => true],
+          'address'    =>  ['required' => true, 'min' => 5, 'max' => 155],
+          'city'    =>  ['required' => true, 'min' => 2, 'max' => 155],
+          'zip'    =>  ['required' => true, 'numeric' => true],
+          'phone'    =>  ['required' => true, 'numeric' => true]
+        ]);
+        if($validate->passed()) {
+          $contact->assign($this->request->get());
           $contact->update();
           Session::addSessionMessage('success', 'Contact data successfully updated.', 'Success!');
           Router::redirect('contacts');
         }
       }
       $this->view->contact = $contact;
-      $this->view->postAction = SITE_ROOT . 'contacts' . DS . 'edit' . DS . $contact->id;
-      $this->view->displayErrors = $validation->displayErrors();
-      $this->view->post = $postedValues;
       $this->view->render('contacts/edit');
+    }
+
+    public function update()
+    {
+
     }
 
   }

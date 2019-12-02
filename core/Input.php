@@ -1,5 +1,9 @@
 <?php
 
+  namespace Core;
+  use Core\FH;
+  use Core\Router;
+
   class Input
   {
     public $inputs = [];
@@ -23,12 +27,16 @@
     {
       if(isset(self::$previousValues[$field])) {
         return self::$previousValues[$field];
-      } 
+      }
+    }
+
+    public static function setPreviousValues($values)
+    {
+      self::$previousValues = (array) $values;
     }
 
     public function getInputValues($field)
     {
-      //return $field;
       return (array_key_exists($field, $this->inputs)) ? $this->inputs[$field] : '';
     }
 

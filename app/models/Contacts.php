@@ -1,5 +1,8 @@
 <?php
 
+  namespace App\Models;
+  use Core\Model;
+
   class Contacts extends Model
   {
 
@@ -38,38 +41,4 @@
       return $this->findFirst($params);
     }
 
-    public static $addValidation = [
-          'fname' => [
-            'display' => 'First Name',
-            'required'  => true,
-            'max' => 155
-          ],
-          'lname' => [
-            'display' => 'Last Name',
-            'required'  => true,
-            'max' => 155
-          ],
-          'email'  =>  [
-            'display'   =>  'Email Address',
-            'required'  =>  true,
-            'unique'  => 'users',
-            'validEmail' =>true
-          ],
-          'address'  =>  [
-            'display'   =>  'Address',
-            'required'  =>  true
-          ],
-          'city'  =>  [
-            'display'   =>  'City',
-            'required'  =>  true
-          ],
-          'zip'  =>  [
-            'display'   =>  'Zip Code',
-            'required'  =>  true
-          ],
-          'phone'  =>  [
-            'display'   =>  'Phone',
-            'required'  =>  true
-          ]
-      ];
   }

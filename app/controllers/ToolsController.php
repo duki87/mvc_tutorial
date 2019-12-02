@@ -1,4 +1,8 @@
 <?php
+
+  namespace App\Controllers;
+  use Core\Controller;
+
   class ToolsController extends Controller
   {
     public function __construct($controller, $action)

@@ -1,5 +1,9 @@
 <?php
 
+  namespace Core\Validators;
+  use Core\Validators\MainValidator;
+  use App\Models\Users;
+
   class UniqueUsernameValidator extends MainValidator
   {
 
