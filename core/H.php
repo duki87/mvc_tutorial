@@ -32,4 +32,13 @@
       $readFile = json_decode($readFile, true);
       return $readFile;
     }
+
+    public static function convertToDS($path)
+    {
+      $subfolders = explode('/', $path);
+      if(!$subfolders) {
+        $subfolders = explode('\'', $path);
+      } 
+      return implode(DS, $subfolders);
+    }
   }

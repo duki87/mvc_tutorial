@@ -15,4 +15,10 @@
       //dnd($_SESSION);
       $this->view->render('home/index');
     }
+
+    public function testAjaxAction()
+    {
+      $res = ['success' => true, 'data' => ['id' => 1, 'name' => 'ajax', 'email' => 'ajax@gmail.com']];
+      $this->jsonResponse($res);
+    }
   }

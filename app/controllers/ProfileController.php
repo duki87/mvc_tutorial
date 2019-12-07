@@ -2,6 +2,9 @@
 
   namespace App\Controllers;
   use Core\Controller;
+  use Core\Input;
+  use Core\FH;
+  use App\Models\Users;
 
   class ProfileController extends Controller
   {
@@ -13,6 +16,8 @@
 
     public function getProfile()
     {
+      $user = Users::currentUser();
+      Input::setPreviousValues($user);
       $this->view->render('profile/userProfile');
     }
 
